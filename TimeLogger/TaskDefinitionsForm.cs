@@ -42,6 +42,7 @@ namespace TimeLogger
 			TaskDefinitionItem item = new TaskDefinitionItem() { description = tbNewTask.Text, groupName = comboGroups.Text, isActive = true };
 			this.dictionaryManager.addItem(item);
 			taskDictionaryItemBindingSource.ResetBindings(true);
+			tbNewTask.Clear();
 		}
 
 		private void usunToolStripMenuItem_Click(object sender, EventArgs e)

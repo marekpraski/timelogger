@@ -5,7 +5,8 @@ namespace TimeLogger
 {
     public class TaskLogItem
     {
-        public int id  = 0;
+		public static string csvHeader = "id;description;date;startTime;endTime;groupName;details";
+		public int id  = 0;
         public string description { get; set; }
 		public string workDetails { get; set; }
         public string groupName { get; set; }

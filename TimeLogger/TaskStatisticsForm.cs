@@ -49,12 +49,19 @@ namespace TimeLogger
 
 		private void loadDgv()
 		{
+			buttonSave.Enabled = false;
+			buttonDelete.Enabled = false;
+
 			if (radioDailyAggregates.Checked)
 				taskLogItemBindingSource.DataSource = getDailyAggregatedTasks(comboDate.Text);
 			else if (radioMonthlyAggregates.Checked)
 				taskLogItemBindingSource.DataSource = getMonthlyAggregatedTasks(comboDate.Text);
 			else
+			{
 				taskLogItemBindingSource.DataSource = this.tasks[comboDate.Text];
+				buttonDelete.Enabled = true;
+				buttonSave.Enabled = true;
+			}
 		}
 
 		private void radio_CheckedChanged(object sender, EventArgs e)
@@ -102,7 +109,20 @@ namespace TimeLogger
 		private List<TaskLogItem> getMonthlyAggregatedTasks(string date)
 		{
 			return getDailyAggregatedTasks(date);
-		} 
+		}
 		#endregion
+
+		private void buttonDelete_Click(object sender, EventArgs e)
+		{
+			TaskLogItem item = taskLogItemBindingSource.Current as TaskLogItem;
+			this.tasks[comboDate.Text].Remove(item);
+			taskLogItemBindingSource.ResetBindings(true);
+		}
+
+		private void buttonSave_Click(object sender, EventArgs e)
+		{
+			new TaskLogManager().saveTasks(tasks);
+			this.DialogResult = DialogResult.OK;
+		}
 	}
 }

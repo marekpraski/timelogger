@@ -10,10 +10,10 @@ namespace TimeLogger
 {
     public partial class MainForm: Form
     {
-		private string tasksFileName = "taskLoggerLog.txt";
 		private List<TaskDefinitionItem> taskDefinitions;
 		private Dictionary<string, List<TaskLogItem>> taskLogs;
 		private TaskDefinitionsManager definitionsManager;
+		private TaskLogManager logManager = new TaskLogManager();
 
 		private int totalGroupboxHeigth = 0;
 		private Button currentButton;
@@ -23,7 +23,6 @@ namespace TimeLogger
         public MainForm()
         {
             InitializeComponent();
-			taskLogs = new Dictionary<string, List<TaskLogItem>>();
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
@@ -37,14 +36,14 @@ namespace TimeLogger
 			if (this.currentTaskLogItem == null)
 				return;
 			logCurrentTask();
-			saveTasks();
+			this.logManager.saveTasks(this.taskLogs);
 		}
 
 		private void initializeProperties()
 		{
 			this.definitionsManager = new TaskDefinitionsManager();
 			this.taskDefinitions = this.definitionsManager.taskDefinitions;
-			readTasks();
+			this.taskLogs = this.logManager.readTasks();
 		}
 
 		#region obliczanie wielkości groupboxów i formatki
@@ -166,10 +165,7 @@ namespace TimeLogger
 			if (button.Equals(currentButton))
 			{
 				button.BackColor = SystemColors.ButtonHighlight;
-				logCurrentTask();
-				saveTasks();
-				this.currentTaskLogItem = null;
-				this.currentButton = null;
+				stopCurrentTask();
 			}
 			else
 			{
@@ -178,6 +174,14 @@ namespace TimeLogger
 				this.currentButton = button;
 			}
 			initializeTimer();
+		}
+
+		private void stopCurrentTask()
+		{
+			logCurrentTask();
+			this.logManager.saveTasks(this.taskLogs);
+			this.currentTaskLogItem = null;
+			this.currentButton = null;
 		}
 
 		private void logCurrentTask()
@@ -212,50 +216,10 @@ namespace TimeLogger
 		}
 		#endregion
 
-		#region czytanie i zapisywanie loga
-		private void readTasks()
-		{
-			if (!File.Exists(tasksFileName))
-				return;
-			string[] s = File.ReadAllLines(tasksFileName);
-			for (int i = 0; i < s.Length; i++)
-			{
-				TaskLogItem item = new TaskLogItem(s[i]);
-				if (taskLogs.ContainsKey(item.date))
-					taskLogs[item.date].Add(item);
-				else
-				{
-					List<TaskLogItem> l = new List<TaskLogItem>();
-					l.Add(item);
-					taskLogs.Add(item.date, l);
-				}
-			}
-		}
-
-		private void saveTasks()
-		{
-			Thread t = new Thread(() => saveTasksAsynch());
-			t.Start();
-		}
-
-		private void saveTasksAsynch()
-		{
-			StringBuilder sb = new StringBuilder();
-			foreach (string date in taskLogs.Keys)
-			{
-				List<TaskLogItem> l = taskLogs[date];
-				for (int i = 0; i < l.Count; i++)
-				{
-					sb.AppendLine(l[i].toString());
-				}
-			}
-			File.WriteAllText(tasksFileName, sb.ToString());
-		}
-		#endregion
-
 		#region przyciski menu
 		private void taskDictionaryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			stopCurrentTask();
 			TaskDefinitionsForm tdf = new TaskDefinitionsForm();
 			tdf.ShowDialog();
 			reloadControls();
@@ -263,12 +227,16 @@ namespace TimeLogger
 
 		private void taskStatsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			stopCurrentTask();
 			TaskStatisticsForm sf = new TaskStatisticsForm(taskLogs);
-			sf.Show();
+			sf.ShowDialog();
+			if (sf.DialogResult == DialogResult.OK)
+				initializeProperties();
 		}
 
 		private void groupsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			stopCurrentTask();
 			GroupsForm df = new GroupsForm();
 			df.ShowDialog();
 		} 
@@ -299,6 +267,9 @@ namespace TimeLogger
 				timer.Stop();
 				timer.Dispose();
 			}
+			if (this.currentTaskLogItem == null)
+				return;
+
 			this.timer = new System.Windows.Forms.Timer();
 			timer.Interval = 3600000;
 			timer.Tick += timer_Tick;
@@ -308,7 +279,7 @@ namespace TimeLogger
 		private void timer_Tick(object sender, EventArgs e)
 		{
 			logCurrentTask();
-			saveTasks();
+			this.logManager.saveTasks(this.taskLogs);
 		}
 	}
 }

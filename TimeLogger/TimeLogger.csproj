@@ -72,6 +72,7 @@
     <Compile Include="TaskDefinitionsManager.cs" />
     <Compile Include="TaskGroupManager.cs" />
     <Compile Include="TaskLogItem.cs" />
+    <Compile Include="TaskLogManager.cs" />
     <Compile Include="TaskStatisticsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +115,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
