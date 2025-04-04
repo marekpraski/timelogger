@@ -1,0 +1,5 @@
+/TimeLogger/bin/
+/TimeLogger/obj/
+/TimeLogger/TimeLogger.csproj.user
+.svn/
+.vs/
