@@ -67,23 +67,34 @@ namespace TimeLogger
 		private List<TaskLogItem> getDailyAggregatedTasks(string date)
 		{
 			List<TaskLogItem> items = tasks[date];
-			Dictionary<string, TaskLogItem> aggregated = new Dictionary<string, TaskLogItem>();
+			Dictionary<string, List<TaskLogItem>> aggregated = new Dictionary<string, List<TaskLogItem>>();
 			for (int i = 0; i < items.Count; i++)
 			{
 				string key = items[i].groupName + items[i].description;
 				if (aggregated.ContainsKey(key))
-					aggregated[key].combineTimes(items[i]);
+					aggregated[key].Add(items[i]);
 				else
 				{
-					TaskLogItem item = items[i].clone();
-					aggregated.Add(item.groupName + item.description, item);
+					List<TaskLogItem> ts = new List<TaskLogItem>();
+					ts.Add(items[i]);
+					aggregated.Add(items[i].groupName + items[i].description, ts);
 				}
 			}
+			return splitDictionary(aggregated);
+		}
 
+		private List<TaskLogItem> splitDictionary(Dictionary<string, List<TaskLogItem>> aggregated)
+		{
 			List<TaskLogItem> l = new List<TaskLogItem>();
 			foreach (string key in aggregated.Keys)
 			{
-				l.Add(aggregated[key]);
+				List<TaskLogItem> ls = aggregated[key];
+				TaskLogItem t = ls[0].clone();
+				for (int i = 1; i < ls.Count; i++)
+				{
+					t.combineTimes(ls[i]);
+				}
+				l.Add(t);
 			}
 			return l;
 		}

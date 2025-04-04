@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace TimeLogger
 {
@@ -17,6 +18,7 @@ namespace TimeLogger
 		private int totalGroupboxHeigth = 0;
 		private Button currentButton;
 		private TaskLogItem currentTaskLogItem;
+		private System.Windows.Forms.Timer timer;
 
         public MainForm()
         {
@@ -34,7 +36,7 @@ namespace TimeLogger
 		{
 			if (this.currentTaskLogItem == null)
 				return;
-			logTask(this.currentTaskLogItem);
+			logCurrentTask();
 			saveTasks();
 		}
 
@@ -164,7 +166,8 @@ namespace TimeLogger
 			if (button.Equals(currentButton))
 			{
 				button.BackColor = SystemColors.ButtonHighlight;
-				logTask(this.currentTaskLogItem);
+				logCurrentTask();
+				saveTasks();
 				this.currentTaskLogItem = null;
 				this.currentButton = null;
 			}
@@ -172,24 +175,24 @@ namespace TimeLogger
 			{
 				toggleButtonColour(button);
 				startNewTask(button);
+				this.currentButton = button;
 			}
-
-			this.currentButton = button;
+			initializeTimer();
 		}
 
-		private void logTask(TaskLogItem task)
+		private void logCurrentTask()
 		{
+			TaskLogItem task = this.currentTaskLogItem;
 			if (task == null)
 				return;
 
 			task.setEndTime(DateTime.Now);
 			task.setWorkDetails(tbWorkDetails.Text);
-			saveTasks();
 		}
 
 		private void startNewTask(Button button)
 		{
-			logTask(this.currentTaskLogItem);
+			logCurrentTask();
 			TaskDefinitionItem taskDefinition = button.Tag as TaskDefinitionItem;
 			this.currentTaskLogItem = new TaskLogItem(taskDefinition);
 			tbWorkDetails.Clear();
@@ -231,6 +234,12 @@ namespace TimeLogger
 
 		private void saveTasks()
 		{
+			Thread t = new Thread(() => saveTasksAsynch());
+			t.Start();
+		}
+
+		private void saveTasksAsynch()
+		{
 			StringBuilder sb = new StringBuilder();
 			foreach (string date in taskLogs.Keys)
 			{
@@ -241,7 +250,7 @@ namespace TimeLogger
 				}
 			}
 			File.WriteAllText(tasksFileName, sb.ToString());
-		} 
+		}
 		#endregion
 
 		#region przyciski menu
@@ -283,9 +292,23 @@ namespace TimeLogger
 		}
 		#endregion
 
+		private void initializeTimer()
+		{
+			if (this.timer != null)
+			{
+				timer.Stop();
+				timer.Dispose();
+			}
+			this.timer = new System.Windows.Forms.Timer();
+			timer.Interval = 3600000;
+			timer.Tick += timer_Tick;
+			timer.Start();
+		}
+
 		private void timer_Tick(object sender, EventArgs e)
 		{
-			logTask(this.currentTaskLogItem);
+			logCurrentTask();
+			saveTasks();
 		}
 	}
 }

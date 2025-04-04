@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.groupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.allTasksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -36,7 +36,6 @@
 			this.mainPanel = new System.Windows.Forms.Panel();
 			this.label1 = new System.Windows.Forms.Label();
 			this.tbWorkDetails = new System.Windows.Forms.TextBox();
-			this.timer = new System.Windows.Forms.Timer(this.components);
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -96,11 +95,6 @@
 			this.tbWorkDetails.Size = new System.Drawing.Size(273, 20);
 			this.tbWorkDetails.TabIndex = 3;
 			// 
-			// timer
-			// 
-			this.timer.Interval = 3600000;
-			this.timer.Tick += new System.EventHandler(this.timer_Tick);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -110,6 +104,7 @@
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.mainPanel);
 			this.Controls.Add(this.menuStrip1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MainForm";
 			this.Text = "Time Logger";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -130,7 +125,6 @@
 		private System.Windows.Forms.Panel mainPanel;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox tbWorkDetails;
-		private System.Windows.Forms.Timer timer;
 	}
 }
 

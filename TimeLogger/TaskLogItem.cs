@@ -21,7 +21,11 @@ namespace TimeLogger
 		public string endTime { get => extractTime(endDateTime); }
 
 		private DateTime startDateTime = DateTime.Now;
-        private DateTime endDateTime = DateTime.Now;		
+        private DateTime endDateTime = DateTime.Now;
+		public TaskLogItem()
+		{
+			
+		}
 
 		/// <summary>
 		/// nowy na podstawie elementu słownikowego
@@ -89,8 +93,9 @@ namespace TimeLogger
 			int minutesTotal;
 			if (this.timeInMinutes > 0)
 				minutesTotal = this.timeInMinutes;
+			else
+				minutesTotal = Convert.ToInt32(endDateTime.Subtract(startDateTime).TotalMinutes);
 			
-			minutesTotal = Convert.ToInt32(endDateTime.Subtract(startDateTime).TotalMinutes);
 			int hours = minutesTotal / 60;
 			if (hours == 0)
 				return minutesTotal + " min";
