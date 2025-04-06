@@ -5,12 +5,20 @@ namespace TimeLogger
 {
     public class TaskLogItem
     {
-		public static string csvHeader = "id;description;date;startTime;endTime;groupName;details";
+		public static string csvHeaderFull = "id;description;date;startTime;endTime;groupName;details";
+		public static string csvHeaderAggregate = "id;date;groupName;description;timeLength;details";
 		public int id  = 0;
         public string description { get; set; }
 		public string workDetails { get; set; }
         public string groupName { get; set; }
-        public string date { get; private set; }
+		/// <summary>
+		/// data w formacie rrrr-mm-dd ustawiana w konstruktorze z DateTime.Now
+		/// </summary>
+		public string date { get; private set; }
+		/// <summary>
+		/// data w formacie rrrr-mm  ustawiana w konstruktorze z DateTime.Now
+		/// </summary>
+		public string yearMonth { get => getYearMonth(); }
 
 		/// <summary>
 		/// wykorzystuję tylko w statystykach, więc nie musi być dynamicznie aktualizowana w czasie życia obiektu
@@ -23,10 +31,6 @@ namespace TimeLogger
 
 		private DateTime startDateTime = DateTime.Now;
         private DateTime endDateTime = DateTime.Now;
-		public TaskLogItem()
-		{
-			
-		}
 
 		/// <summary>
 		/// nowy na podstawie elementu słownikowego
@@ -52,7 +56,10 @@ namespace TimeLogger
 			this.endDateTime = endTime;
 		}
 
-        public string toString()
+		/// <summary>
+		/// "id;description;date;startTime;endTime;groupName;details";
+		/// </summary>
+		public string toStringDetailed()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(id); sb.Append(";");
@@ -64,6 +71,55 @@ namespace TimeLogger
 			sb.Append(workDetails);
 			return sb.ToString();
         }
+
+		/// <summary>
+		/// "id;date;groupName;description;timeLength;details";
+		/// </summary>
+		public string toStringAggregated()
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append(id); sb.Append(";");
+			sb.Append(date); sb.Append(";");
+			sb.Append(groupName); sb.Append(";");
+			sb.Append(description); sb.Append(";");
+			sb.Append(getHoursMinutes()); sb.Append(";");
+			sb.Append(workDetails);
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// czyści opis zadania, bo gdy klonuję kopije się też ta właściwość i
+		/// podczas agregacji uzyskuję powtórzenie opisu zadania dla pierwszego wpisu;
+		/// </summary>
+		internal void clearWorkDetails()
+		{
+			this.workDetails = "";
+		}
+
+		internal TaskLogItem clone()
+		{
+			return new TaskLogItem(this.toStringDetailed());
+		}
+
+		internal void aggregate(TaskLogItem other)
+		{
+			this.timeInMinutes += other.timeInMinutes;
+			if (!String.IsNullOrEmpty(other.workDetails))
+				this.workDetails += addLineBreak() + other.workDetails;
+		}
+
+		private string addLineBreak()
+		{
+			if (String.IsNullOrEmpty(this.workDetails))
+				return "";
+
+			return "\r\n";
+		}
+
+		internal void setWorkDetails(string text)
+		{
+			this.workDetails = text;
+		}
 
 		private string extractTime(DateTime dt)
 		{
@@ -110,26 +166,16 @@ namespace TimeLogger
 			this.date = d.Year + "-" + getDoubleDigit(d.Month) + "-" + getDoubleDigit(d.Day);
 		}
 
+		private string getYearMonth()
+		{
+			return this.date.Substring(0, 7);
+		}
+
 		private string getDoubleDigit(int number)
 		{
 			if (number < 10)
 				return "0" + number.ToString();
 			return number.ToString();
-		}
-
-		internal TaskLogItem clone()
-		{
-			return new TaskLogItem(this.toString());
-		}
-
-		internal void combineTimes(TaskLogItem other)
-		{
-			this.timeInMinutes += other.timeInMinutes;
-		}
-
-		internal void setWorkDetails(string text)
-		{
-			this.workDetails = text; ;
 		}
 	}
 }

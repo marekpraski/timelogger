@@ -6,19 +6,51 @@ namespace TimeLogger
 {
     public partial class TaskStatisticsForm: Form
     {
-		private readonly Dictionary<string, List<TaskLogItem>> tasks;
+		private readonly Dictionary<string, List<TaskLogItem>> detailedLogsGroupedByDay;    //kluczem jest pełna data rrrr-mm-dd
+		private Dictionary<string, List<TaskLogItem>> detailedLogsGroupedByMonth;
+		private List<string> yearMonths;
 
-		public TaskStatisticsForm(Dictionary<string, List<TaskLogItem>> tasks)
+		public TaskStatisticsForm(Dictionary<string, List<TaskLogItem>> dailyTaskLogs)
         {
             InitializeComponent();
-			this.tasks = tasks;
+			this.detailedLogsGroupedByDay = dailyTaskLogs;
+			this.yearMonths = extractYearMonths();
+			detailedLogsGroupedByMonth = groupTaskLogsByMonth();
+		}
+
+		#region metody na starcie
+		private void TaskStatisticsForm_Load(object sender, EventArgs e)
+		{
 			fillCombo();
+			if (String.IsNullOrEmpty(comboDate.Text))
+				return;
+		}
+
+		private List<string> extractYearMonths()
+		{
+			this.yearMonths = new List<string>();
+			HashSet<string> hs = new HashSet<string>();
+			foreach (string key in detailedLogsGroupedByDay.Keys)
+			{
+				List<TaskLogItem> l = detailedLogsGroupedByDay[key];
+				for (int i = 0; i < l.Count; i++)
+				{
+					hs.Add(l[i].yearMonth);
+				}
+			}
+
+			List<string> ls = new List<string>(hs.Count);
+			foreach (string s in hs)
+			{
+				ls.Add(s);
+			}
+			return ls;
 		}
 
 		private void fillCombo()
 		{
 			comboDate.Items.Clear();
-			if (tasks == null || tasks.Keys.Count == 0)
+			if (detailedLogsGroupedByDay == null || detailedLogsGroupedByDay.Keys.Count == 0)
 				return;
 			if (radioMonthlyAggregates.Checked)
 				fillComboMonths();
@@ -28,52 +60,105 @@ namespace TimeLogger
 
 		private void fillComboMonths()
 		{
-			fillComboDays();
-		}
-
-		private void fillComboDays()
-		{
-			foreach (string k in tasks.Keys)
+			for (int i = 0; i < this.yearMonths.Count; i++)
 			{
-				comboDate.Items.Add(k);
+				comboDate.Items.Add(this.yearMonths[i]);
 			}
 			comboDate.SelectedIndex = 0;
 		}
 
-		private void TaskStatisticsForm_Load(object sender, EventArgs e)
+		private void fillComboDays()
 		{
-			if (String.IsNullOrEmpty(comboDate.Text))
-				return;
+			foreach (string k in detailedLogsGroupedByDay.Keys)
+			{
+				comboDate.Items.Add(k);
+			}
+			comboDate.SelectedIndex = 0;
+		} 
+		#endregion
+
+		private void comboDate_SelectedIndexChanged(object sender, EventArgs e)
+		{
 			loadDgv();
 		}
 
 		private void loadDgv()
 		{
-			buttonSave.Enabled = false;
-			buttonDelete.Enabled = false;
+			toggleControlsEnabled(false);
 
 			if (radioDailyAggregates.Checked)
-				taskLogItemBindingSource.DataSource = getDailyAggregatedTasks(comboDate.Text);
+				taskLogItemBindingSource.DataSource = getAggregatedTasks(comboDate.Text, detailedLogsGroupedByDay);
 			else if (radioMonthlyAggregates.Checked)
-				taskLogItemBindingSource.DataSource = getMonthlyAggregatedTasks(comboDate.Text);
+				taskLogItemBindingSource.DataSource = getAggregatedTasks(comboDate.Text, detailedLogsGroupedByMonth);
 			else
 			{
-				taskLogItemBindingSource.DataSource = this.tasks[comboDate.Text];
-				buttonDelete.Enabled = true;
-				buttonSave.Enabled = true;
+				taskLogItemBindingSource.DataSource = this.detailedLogsGroupedByDay[comboDate.Text];
+				toggleControlsEnabled(true);
 			}
+		}
+
+		private void toggleControlsEnabled(bool isEnabled)
+		{
+			buttonSave.Enabled = isEnabled;
+			buttonDelete.Enabled = isEnabled;
+			endTimeDataGridViewTextBoxColumn.Visible = isEnabled;
+			startTimeDataGridViewTextBoxColumn.Visible = isEnabled;
 		}
 
 		private void radio_CheckedChanged(object sender, EventArgs e)
 		{
+			if (radioNet.Checked)
+				btnToCsv.Enabled = false;
+			else
+				btnToCsv.Enabled = true;
+				
 			fillCombo();
 			loadDgv();
 		}
 
-		#region aggregowanie danych
-		private List<TaskLogItem> getDailyAggregatedTasks(string date)
+		#region tworzenie słownika TaskLogItems grupowanych po miesiącu
+		private Dictionary<string, List<TaskLogItem>> groupTaskLogsByMonth()
 		{
-			List<TaskLogItem> items = tasks[date];
+			Dictionary<string, List<TaskLogItem>> monthly = new Dictionary<string, List<TaskLogItem>>();
+			foreach (string day in this.detailedLogsGroupedByDay.Keys)
+			{
+				List<TaskLogItem> dailyTasks = detailedLogsGroupedByDay[day];
+				for (int i = 0; i < dailyTasks.Count; i++)
+				{
+					addTaskLogToDict(dailyTasks[i], monthly);
+				}
+			}
+			return monthly;
+		}
+
+		private void addTaskLogToDict(TaskLogItem taskLogItem, Dictionary<string, List<TaskLogItem>> monthly)
+		{
+			if (monthly.ContainsKey(taskLogItem.yearMonth))
+				monthly[taskLogItem.yearMonth].Add(taskLogItem);
+			else
+			{
+				List<TaskLogItem> l = new List<TaskLogItem>();
+				l.Add(taskLogItem);
+				monthly.Add(taskLogItem.yearMonth, l);
+			}
+		}
+		#endregion
+
+		#region aggregowanie danych
+
+		private Dictionary<string, List<TaskLogItem>> getAggregatedLog(Dictionary<string, List<TaskLogItem>> detailedLogs)
+		{
+			Dictionary<string, List<TaskLogItem>> dict = new Dictionary<string, List<TaskLogItem>>();
+			foreach (string date in detailedLogs.Keys)
+			{
+				dict.Add(date, getAggregatedTasks(date, detailedLogs));
+			}
+			return dict;
+		}
+
+		private List<TaskLogItem> getAggregatedTasks(string date, Dictionary<string, List<TaskLogItem>> taskLogs)
+		{
+			List<TaskLogItem> items = taskLogs[date];
 			Dictionary<string, List<TaskLogItem>> aggregated = new Dictionary<string, List<TaskLogItem>>();
 			for (int i = 0; i < items.Count; i++)
 			{
@@ -97,32 +182,50 @@ namespace TimeLogger
 			{
 				List<TaskLogItem> ls = aggregated[key];
 				TaskLogItem t = ls[0].clone();
-				for (int i = 1; i < ls.Count; i++)
+				t.clearWorkDetails();
+				for (int i = 0; i < ls.Count; i++)
 				{
-					t.combineTimes(ls[i]);
+					t.aggregate(ls[i]);
 				}
 				l.Add(t);
 			}
 			return l;
 		}
 
-		private List<TaskLogItem> getMonthlyAggregatedTasks(string date)
-		{
-			return getDailyAggregatedTasks(date);
-		}
 		#endregion
 
+		#region przyciski nawigatora
 		private void buttonDelete_Click(object sender, EventArgs e)
 		{
 			TaskLogItem item = taskLogItemBindingSource.Current as TaskLogItem;
-			this.tasks[comboDate.Text].Remove(item);
+			int index = taskLogItemBindingSource.IndexOf(item);
+			this.detailedLogsGroupedByDay[comboDate.Text].Remove(item);
 			taskLogItemBindingSource.ResetBindings(true);
+			setBindinsourcePosition(index);
+		}
+
+		private void setBindinsourcePosition(int index)
+		{
+			if (taskLogItemBindingSource.Count == 0)
+				return;
+			taskLogItemBindingSource.Position = index == 0 ? 0 : taskLogItemBindingSource.Position = index - 1;
 		}
 
 		private void buttonSave_Click(object sender, EventArgs e)
 		{
-			new TaskLogManager().saveTasks(tasks);
+			new TaskLogManager().saveTaskLogs(LogType.Detailed, detailedLogsGroupedByDay);
 			this.DialogResult = DialogResult.OK;
 		}
+
+		private void btnToCsv_Click(object sender, EventArgs e)
+		{
+			if (radioDailyAggregates.Checked)
+				new TaskLogManager().saveTaskLogs(LogType.AggregatedDaily, getAggregatedLog(this.detailedLogsGroupedByDay));
+			else if (radioMonthlyAggregates.Checked)
+				new TaskLogManager().saveTaskLogs(LogType.AggregatedMonthly, getAggregatedLog(this.detailedLogsGroupedByMonth));
+		}
+
+		#endregion
+
 	}
 }

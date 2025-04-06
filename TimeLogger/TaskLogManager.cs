@@ -31,26 +31,44 @@ namespace TimeLogger
 			return taskLogs;
 		}
 
-		internal void saveTasks(Dictionary<string, List<TaskLogItem>> taskLogs)
+		internal void saveTaskLogs(LogType logType, Dictionary<string, List<TaskLogItem>> taskLogs)
 		{
-			Thread t = new Thread(() => saveTasksAsynch(taskLogs));
+			Thread t = new Thread(() => saveFileAsynch(getLogFileName(logType), getCsvFileHeader(logType), taskLogs));
 			t.Start();
 		}
 
-		private void saveTasksAsynch(Dictionary<string, List<TaskLogItem>> taskLogs)
+		private void saveFileAsynch(string logFileName, string csvFileHeader, Dictionary<string, List<TaskLogItem>> taskLogs)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine(TaskLogItem.csvHeader);
-			
+			sb.AppendLine(csvFileHeader);
+
 			foreach (string date in taskLogs.Keys)
 			{
 				List<TaskLogItem> l = taskLogs[date];
 				for (int i = 0; i < l.Count; i++)
 				{
-					sb.AppendLine(l[i].toString());
+					sb.AppendLine(l[i].toStringAggregated());
 				}
 			}
-			File.WriteAllText(tasksFileName, sb.ToString());
+			File.WriteAllText(logFileName, sb.ToString());
+		}
+
+		private string getCsvFileHeader(LogType logType)
+		{
+			if (logType == LogType.Detailed)
+				return TaskLogItem.csvHeaderFull;
+			else
+				return TaskLogItem.csvHeaderAggregate;
+		}
+
+		private string getLogFileName(LogType logType)
+		{
+			if (logType == LogType.Detailed)
+				return this.tasksFileName;
+			if (logType == LogType.AggregatedDaily)
+				return "taskLoggerDailyAggregates.csv";
+			else
+				return "taskLoggerMonthlyAggregates.csv";
 		}
 
 	}

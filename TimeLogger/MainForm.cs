@@ -36,7 +36,7 @@ namespace TimeLogger
 			if (this.currentTaskLogItem == null)
 				return;
 			logCurrentTask();
-			this.logManager.saveTasks(this.taskLogs);
+			this.logManager.saveTaskLogs(LogType.Detailed, this.taskLogs);
 		}
 
 		private void initializeProperties()
@@ -179,7 +179,7 @@ namespace TimeLogger
 		private void stopCurrentTask()
 		{
 			logCurrentTask();
-			this.logManager.saveTasks(this.taskLogs);
+			this.logManager.saveTaskLogs(LogType.Detailed, this.taskLogs);
 			this.currentTaskLogItem = null;
 			this.currentButton = null;
 		}
@@ -279,7 +279,7 @@ namespace TimeLogger
 		private void timer_Tick(object sender, EventArgs e)
 		{
 			logCurrentTask();
-			this.logManager.saveTasks(this.taskLogs);
+			this.logManager.saveTaskLogs(LogType.Detailed, this.taskLogs);
 		}
 	}
 }
