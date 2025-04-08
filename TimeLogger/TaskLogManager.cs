@@ -33,12 +33,13 @@ namespace TimeLogger
 
 		internal void saveTaskLogs(LogType logType, Dictionary<string, List<TaskLogItem>> taskLogs)
 		{
-			Thread t = new Thread(() => saveFileAsynch(getLogFileName(logType), getCsvFileHeader(logType), taskLogs));
-			t.Start();
+			saveFileAsynch(logType, taskLogs);
 		}
 
-		private void saveFileAsynch(string logFileName, string csvFileHeader, Dictionary<string, List<TaskLogItem>> taskLogs)
+		private void saveFileAsynch(LogType logType, Dictionary<string, List<TaskLogItem>> taskLogs)
 		{
+			string logFileName = getLogFileName(logType);
+			string csvFileHeader = getCsvFileHeader(logType);
 			StringBuilder sb = new StringBuilder();
 			sb.AppendLine(csvFileHeader);
 
@@ -47,10 +48,19 @@ namespace TimeLogger
 				List<TaskLogItem> l = taskLogs[date];
 				for (int i = 0; i < l.Count; i++)
 				{
-					sb.AppendLine(l[i].toStringAggregated());
+					string entry = getLogEntry(l[i], logType);
+					sb.AppendLine(entry);
 				}
 			}
 			File.WriteAllText(logFileName, sb.ToString());
+		}
+
+		private string getLogEntry(TaskLogItem logItem, LogType logType)
+		{
+			if (logType == LogType.Detailed)
+				return logItem.toStringDetailed();
+
+			return logItem.toStringAggregated();
 		}
 
 		private string getCsvFileHeader(LogType logType)

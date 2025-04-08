@@ -7,14 +7,14 @@ namespace TimeLogger
     {
 		private TaskGroupManager groupManager;
 		private TaskDefinitionsManager dictionaryManager;
-        public TaskDefinitionsForm()
+        public TaskDefinitionsForm(TaskGroupManager groupManager)
         {
             InitializeComponent();
+			this.groupManager = groupManager;
         }
 
 		private void TaskDictionaryForm_Load(object sender, EventArgs e)
 		{
-			this.groupManager = new TaskGroupManager();
 			this.dictionaryManager = new TaskDefinitionsManager();
 			loadCombo();
 			loadDgv();

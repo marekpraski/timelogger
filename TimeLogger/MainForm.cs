@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Text;
 using System.Windows.Forms;
-using System.Threading;
 
 namespace TimeLogger
 {
@@ -35,8 +32,7 @@ namespace TimeLogger
 		{
 			if (this.currentTaskLogItem == null)
 				return;
-			logCurrentTask();
-			this.logManager.saveTaskLogs(LogType.Detailed, this.taskLogs);
+			stopCurrentTask();
 		}
 
 		private void initializeProperties()
@@ -170,6 +166,7 @@ namespace TimeLogger
 			else
 			{
 				toggleButtonColour(button);
+				stopCurrentTask();
 				startNewTask(button);
 				this.currentButton = button;
 			}
@@ -178,25 +175,30 @@ namespace TimeLogger
 
 		private void stopCurrentTask()
 		{
+			if (this.currentTaskLogItem == null)
+				return;
+			
 			logCurrentTask();
-			this.logManager.saveTaskLogs(LogType.Detailed, this.taskLogs);
+			if (this.currentTaskLogItem.taskDurationInMinutes < 2)   //nie zapisuję tak krótkich zadań, prawdopodobnie to pomyłka
+				removeTaskFromLog(this.currentTaskLogItem);
+			else
+				this.logManager.saveTaskLogs(LogType.Detailed, this.taskLogs);
+			
 			this.currentTaskLogItem = null;
 			this.currentButton = null;
 		}
 
 		private void logCurrentTask()
 		{
-			TaskLogItem task = this.currentTaskLogItem;
-			if (task == null)
+			if (this.currentTaskLogItem == null)
 				return;
 
-			task.setEndTime(DateTime.Now);
-			task.setWorkDetails(tbWorkDetails.Text);
+			this.currentTaskLogItem.setEndTime(DateTime.Now);
+			this.currentTaskLogItem.setWorkDetails(tbWorkDetails.Text);
 		}
 
 		private void startNewTask(Button button)
 		{
-			logCurrentTask();
 			TaskDefinitionItem taskDefinition = button.Tag as TaskDefinitionItem;
 			this.currentTaskLogItem = new TaskLogItem(taskDefinition);
 			tbWorkDetails.Clear();
@@ -214,13 +216,24 @@ namespace TimeLogger
 				taskLogs.Add(item.date, l);
 			}
 		}
+
+		private void removeTaskFromLog(TaskLogItem logItem)
+		{
+			this.taskLogs[logItem.date].Remove(logItem);
+		}
 		#endregion
 
 		#region przyciski menu
 		private void taskDictionaryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			TaskGroupManager gm = new TaskGroupManager();
+			if (gm.groupNames == null || gm.groupNames.Count == 0)
+			{
+				MessageBox.Show("You need to define groups first");
+				return;
+			}
 			stopCurrentTask();
-			TaskDefinitionsForm tdf = new TaskDefinitionsForm();
+			TaskDefinitionsForm tdf = new TaskDefinitionsForm(gm);
 			tdf.ShowDialog();
 			reloadControls();
 		}
@@ -228,6 +241,11 @@ namespace TimeLogger
 		private void taskStatsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			stopCurrentTask();
+			if (taskLogs == null || taskLogs.Count == 0)
+			{
+				MessageBox.Show("No statistics to display");
+				return;
+			}
 			TaskStatisticsForm sf = new TaskStatisticsForm(taskLogs);
 			sf.ShowDialog();
 			if (sf.DialogResult == DialogResult.OK)
@@ -260,6 +278,7 @@ namespace TimeLogger
 		}
 		#endregion
 
+		#region obsługa automatycznego zapisu
 		private void initializeTimer()
 		{
 			if (this.timer != null)
@@ -280,6 +299,7 @@ namespace TimeLogger
 		{
 			logCurrentTask();
 			this.logManager.saveTaskLogs(LogType.Detailed, this.taskLogs);
-		}
+		} 
+		#endregion
 	}
 }

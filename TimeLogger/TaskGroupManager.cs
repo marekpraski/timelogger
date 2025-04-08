@@ -8,6 +8,9 @@ namespace TimeLogger
     public class TaskGroupManager
     {
 		private readonly string groupsFileName = "timeLoggerGroups.txt";
+		/// <summary>
+		/// lista grup czytana z pliku txt i tworzona podczas tworzenia obiektu TaskGroupManager
+		/// </summary>
 		public List<string> groupNames { get; }
 
 		public TaskGroupManager()

@@ -21,11 +21,19 @@ namespace TimeLogger
 		public string yearMonth { get => getYearMonth(); }
 
 		/// <summary>
-		/// wykorzystuję tylko w statystykach, więc nie musi być dynamicznie aktualizowana w czasie życia obiektu
+		/// wykorzystuję w statystykach, nie może być dynamicznie aktualizowana w czasie życia obiektu
 		/// </summary>
 		private int timeInMinutes = 0;
 
-		public string timeLength { get => getHoursMinutes(); }
+		/// <summary>
+		/// czas zadania w minutach obliczany z różnicy czasu końcowego i czasu początkowego
+		/// </summary>
+		public int taskDurationInMinutes { get => getTimeInMinutes(); }
+
+		/// <summary>
+		/// czas zadania w formacie hh:mm
+		/// </summary>
+		public string taskDurationInHoursMinutes { get => getHoursMinutes(); }
 		public string startTime { get => extractTime(startDateTime) ; }
 		public string endTime { get => extractTime(endDateTime); }
 
@@ -88,12 +96,13 @@ namespace TimeLogger
 		}
 
 		/// <summary>
-		/// czyści opis zadania, bo gdy klonuję kopije się też ta właściwość i
-		/// podczas agregacji uzyskuję powtórzenie opisu zadania dla pierwszego wpisu;
+		/// czyści opis zadania oraz timeInMinutes, bo gdy klonuję kopiują się też te właściwości i
+		/// podczas agregacji uzyskuję powtórzenie czasu i opisu zadania dla pierwszego wpisu;
 		/// </summary>
-		internal void clearWorkDetails()
+		internal void clearTimeInMinutesAndWorkDetails()
 		{
 			this.workDetails = "";
+			this.timeInMinutes = 0;
 		}
 
 		internal TaskLogItem clone()
@@ -142,7 +151,12 @@ namespace TimeLogger
 
 		private void setTimeInMinutes()
 		{
-			this.timeInMinutes = Convert.ToInt32(endDateTime.Subtract(startDateTime).TotalMinutes);
+			this.timeInMinutes = getTimeInMinutes();
+		}
+
+		private int getTimeInMinutes()
+		{
+			return Convert.ToInt32(endDateTime.Subtract(startDateTime).TotalMinutes);
 		}
 
 		private string getHoursMinutes()
