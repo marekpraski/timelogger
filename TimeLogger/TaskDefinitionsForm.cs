@@ -6,18 +6,23 @@ namespace TimeLogger
     public partial class TaskDefinitionsForm: Form
     {
 		private TaskGroupManager groupManager;
-		private TaskDefinitionsManager dictionaryManager;
-        public TaskDefinitionsForm(TaskGroupManager groupManager)
+		private TaskDefinitionsManager definitionsManager;
+        public TaskDefinitionsForm(TaskGroupManager groupManager, TaskDefinitionsManager definitionsManager)
         {
             InitializeComponent();
 			this.groupManager = groupManager;
-        }
+			this.definitionsManager = definitionsManager;
+		}
 
 		private void TaskDictionaryForm_Load(object sender, EventArgs e)
 		{
-			this.dictionaryManager = new TaskDefinitionsManager();
 			loadCombo();
 			loadDgv();
+		}
+
+		private void TaskDefinitionsForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			dgv.EndEdit();
 		}
 
 		private void loadCombo()
@@ -34,21 +39,23 @@ namespace TimeLogger
 
 		private void loadDgv()
 		{
-			taskDictionaryItemBindingSource.DataSource = this.dictionaryManager.taskDefinitions;
+			taskDictionaryItemBindingSource.DataSource = this.definitionsManager.taskDefinitions;
 		}
 
-		private void dodajToolStripMenuItem_Click(object sender, EventArgs e)
+		private void addToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			if (String.IsNullOrEmpty(tbNewTask.Text))
+				return;
 			TaskDefinitionItem item = new TaskDefinitionItem() { description = tbNewTask.Text, groupName = comboGroups.Text, isActive = true };
-			this.dictionaryManager.addItem(item);
+			this.definitionsManager.addItem(item);
 			taskDictionaryItemBindingSource.ResetBindings(true);
 			tbNewTask.Clear();
 		}
 
-		private void usunToolStripMenuItem_Click(object sender, EventArgs e)
+		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TaskDefinitionItem item = taskDictionaryItemBindingSource.Current as TaskDefinitionItem;
-			this.dictionaryManager.removeItem(item);
+			this.definitionsManager.removeItem(item);
 			taskDictionaryItemBindingSource.ResetBindings(true);
 		}
 
@@ -72,12 +79,30 @@ namespace TimeLogger
 		{
 			if (e.RowIndex < 0 || e.ColumnIndex < 0)
 				return;
-			bool isChecked = (bool)(dgv.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCheckBoxCell).Value;
-			TaskDefinitionItem item = taskDictionaryItemBindingSource.Current as TaskDefinitionItem;
-			item.isActive = isChecked;
-			taskDictionaryItemBindingSource.ResetCurrentItem();
-			this.dictionaryManager.saveDictionary();
-		} 
+			if (e.ColumnIndex == 2)
+			{
+				bool isChecked = (bool)(dgv.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCheckBoxCell).Value;
+				TaskDefinitionItem item = taskDictionaryItemBindingSource.Current as TaskDefinitionItem;
+				item.isActive = isChecked;
+				taskDictionaryItemBindingSource.ResetCurrentItem();
+				this.definitionsManager.saveDictionary();
+			}
+		}
 		#endregion
+
+		private void dgv_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+		{
+			if (e.RowIndex < 0 || e.ColumnIndex < 0)
+				return;
+			if (e.ColumnIndex == 1)
+			{
+				string descr = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+				TaskDefinitionItem item = taskDictionaryItemBindingSource.Current as TaskDefinitionItem;
+				item.description = descr;
+				taskDictionaryItemBindingSource.ResetCurrentItem();
+				this.definitionsManager.saveDictionary();
+			}
+		}
+
 	}
 }

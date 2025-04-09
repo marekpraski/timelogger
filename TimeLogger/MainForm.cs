@@ -233,7 +233,7 @@ namespace TimeLogger
 				return;
 			}
 			stopCurrentTask();
-			TaskDefinitionsForm tdf = new TaskDefinitionsForm(gm);
+			TaskDefinitionsForm tdf = new TaskDefinitionsForm(gm, this.definitionsManager);
 			tdf.ShowDialog();
 			reloadControls();
 		}

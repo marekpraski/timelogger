@@ -128,4 +128,7 @@
     <Content Include="time_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>if $(ConfigurationName) == Release C:\Users\marek_p\source\repos\AssemblyInfoManager\AssemblyInfoManager\bin\Release\AssemblyInfoManager.exe C:\Users\marek_p\source\repos\TimeLogger\TimeLogger\Properties\AssemblyInfo.cs  ..\TimeLogger.csproj ..\bin\Release\</PreBuildEvent>
+  </PropertyGroup>
 </Project>
