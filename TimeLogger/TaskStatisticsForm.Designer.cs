@@ -58,6 +58,9 @@
 			this.btnToCsv = new System.Windows.Forms.ToolStripButton();
 			this.comboGroup = new System.Windows.Forms.ComboBox();
 			this.label2 = new System.Windows.Forms.Label();
+			this.label3 = new System.Windows.Forms.Label();
+			this.comboYearMonth = new System.Windows.Forms.ComboBox();
+			this.label4 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.taskLogItemBindingSource)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
@@ -86,7 +89,7 @@
 			this.dataGridView1.ReadOnly = true;
 			this.dataGridView1.RowHeadersVisible = false;
 			this.dataGridView1.RowHeadersWidth = 51;
-			this.dataGridView1.Size = new System.Drawing.Size(920, 420);
+			this.dataGridView1.Size = new System.Drawing.Size(918, 420);
 			this.dataGridView1.TabIndex = 0;
 			// 
 			// groupNameDataGridViewTextBoxColumn
@@ -142,16 +145,16 @@
 			// 
 			this.comboDate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboDate.FormattingEnabled = true;
-			this.comboDate.Location = new System.Drawing.Point(290, 29);
+			this.comboDate.Location = new System.Drawing.Point(46, 30);
 			this.comboDate.Name = "comboDate";
-			this.comboDate.Size = new System.Drawing.Size(138, 21);
+			this.comboDate.Size = new System.Drawing.Size(100, 21);
 			this.comboDate.TabIndex = 1;
 			this.comboDate.SelectedIndexChanged += new System.EventHandler(this.comboDate_SelectedIndexChanged);
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(256, 33);
+			this.label1.Location = new System.Drawing.Point(12, 34);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(28, 13);
 			this.label1.TabIndex = 2;
@@ -161,7 +164,7 @@
 			// 
 			this.radioDailyAggregates.AutoSize = true;
 			this.radioDailyAggregates.Checked = true;
-			this.radioDailyAggregates.Location = new System.Drawing.Point(496, 31);
+			this.radioDailyAggregates.Location = new System.Drawing.Point(152, 34);
 			this.radioDailyAggregates.Name = "radioDailyAggregates";
 			this.radioDailyAggregates.Size = new System.Drawing.Size(102, 17);
 			this.radioDailyAggregates.TabIndex = 3;
@@ -173,7 +176,7 @@
 			// radioNet
 			// 
 			this.radioNet.AutoSize = true;
-			this.radioNet.Location = new System.Drawing.Point(736, 31);
+			this.radioNet.Location = new System.Drawing.Point(383, 33);
 			this.radioNet.Name = "radioNet";
 			this.radioNet.Size = new System.Drawing.Size(40, 17);
 			this.radioNet.TabIndex = 4;
@@ -184,7 +187,7 @@
 			// radioMonthlyAggregates
 			// 
 			this.radioMonthlyAggregates.AutoSize = true;
-			this.radioMonthlyAggregates.Location = new System.Drawing.Point(604, 31);
+			this.radioMonthlyAggregates.Location = new System.Drawing.Point(260, 34);
 			this.radioMonthlyAggregates.Name = "radioMonthlyAggregates";
 			this.radioMonthlyAggregates.Size = new System.Drawing.Size(117, 17);
 			this.radioMonthlyAggregates.TabIndex = 5;
@@ -219,7 +222,7 @@
 			this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
 			this.bindingNavigator1.Name = "bindingNavigator1";
 			this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-			this.bindingNavigator1.Size = new System.Drawing.Size(941, 27);
+			this.bindingNavigator1.Size = new System.Drawing.Size(939, 27);
 			this.bindingNavigator1.TabIndex = 6;
 			this.bindingNavigator1.Text = "bindingNavigator1";
 			// 
@@ -325,26 +328,57 @@
 			// 
 			this.comboGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboGroup.FormattingEnabled = true;
-			this.comboGroup.Location = new System.Drawing.Point(53, 29);
+			this.comboGroup.Location = new System.Drawing.Point(576, 31);
 			this.comboGroup.Name = "comboGroup";
-			this.comboGroup.Size = new System.Drawing.Size(197, 21);
+			this.comboGroup.Size = new System.Drawing.Size(150, 21);
 			this.comboGroup.TabIndex = 7;
 			this.comboGroup.SelectedIndexChanged += new System.EventHandler(this.comboGroup_SelectedIndexChanged);
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(13, 32);
+			this.label2.Location = new System.Drawing.Point(536, 34);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(34, 13);
 			this.label2.TabIndex = 8;
 			this.label2.Text = "group";
 			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(732, 34);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(59, 13);
+			this.label3.TabIndex = 10;
+			this.label3.Text = "year-month";
+			// 
+			// comboYearMonth
+			// 
+			this.comboYearMonth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboYearMonth.FormattingEnabled = true;
+			this.comboYearMonth.Location = new System.Drawing.Point(797, 31);
+			this.comboYearMonth.Name = "comboYearMonth";
+			this.comboYearMonth.Size = new System.Drawing.Size(80, 21);
+			this.comboYearMonth.TabIndex = 9;
+			this.comboYearMonth.SelectedIndexChanged += new System.EventHandler(this.comboYearMonth_SelectedIndexChanged);
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(484, 34);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(46, 13);
+			this.label4.TabIndex = 11;
+			this.label4.Text = "Filter by:";
+			// 
 			// TaskStatisticsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(941, 483);
+			this.ClientSize = new System.Drawing.Size(939, 483);
+			this.Controls.Add(this.label4);
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.comboYearMonth);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.comboGroup);
 			this.Controls.Add(this.bindingNavigator1);
@@ -397,5 +431,8 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn endTimeDataGridViewTextBoxColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn taskDurationInHoursMinutesDataGridViewTextBoxColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn workDetailsDataGridViewTextBoxColumn;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.ComboBox comboYearMonth;
+		private System.Windows.Forms.Label label4;
 	}
 }

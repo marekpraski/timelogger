@@ -122,7 +122,7 @@ namespace TimeLogger
 			if (String.IsNullOrEmpty(this.workDetails))
 				return "";
 
-			return "\r\n";
+			return " , ";
 		}
 
 		internal void setWorkDetails(string text)
