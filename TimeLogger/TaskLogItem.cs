@@ -5,8 +5,8 @@ namespace TimeLogger
 {
     public class TaskLogItem
     {
-		public static string csvHeaderFull = "id;description;date;startTime;endTime;groupName;details";
-		public static string csvHeaderAggregate = "id;date;groupName;description;timeLength;details";
+		public static string csvHeaderFull = "id;description;date;startTime;endTime;groupName;details;timeInMinutes";
+		public static string csvHeaderAggregate = "id;date;groupName;description;timeHourMinutes;timeInMinutes;details";
 		public int id  = 0;
         public string description { get; set; }
 		public string workDetails { get; set; }
@@ -65,7 +65,7 @@ namespace TimeLogger
 		}
 
 		/// <summary>
-		/// "id;description;date;startTime;endTime;groupName;details";
+		/// "id;description;date;startTime;endTime;groupName;details;timeInMinutes"
 		/// </summary>
 		public string toStringDetailed()
         {
@@ -76,12 +76,13 @@ namespace TimeLogger
             sb.Append(startDateTime.ToString()); sb.Append(";");
             sb.Append(endDateTime.ToString()); sb.Append(";");
 			sb.Append(groupName); sb.Append(";");
-			sb.Append(workDetails);
+			sb.Append(workDetails); sb.Append(";");
+			sb.Append(timeInMinutes);
 			return sb.ToString();
         }
 
 		/// <summary>
-		/// "id;date;groupName;description;timeLength;details";
+		/// "id;date;groupName;description;timeHourMinutes;timeInMinutes;details"
 		/// </summary>
 		public string toStringAggregated()
 		{
@@ -91,6 +92,7 @@ namespace TimeLogger
 			sb.Append(groupName); sb.Append(";");
 			sb.Append(description); sb.Append(";");
 			sb.Append(getHoursMinutes()); sb.Append(";");
+			sb.Append(timeInMinutes); sb.Append(";");
 			sb.Append(workDetails);
 			return sb.ToString();
 		}

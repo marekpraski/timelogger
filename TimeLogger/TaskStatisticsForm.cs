@@ -25,6 +25,7 @@ namespace TimeLogger
 		private Dictionary<string, List<TaskLogItem>> detailedLogsGroupedByMonth;    //kluczem jest miesiąc rrrr-mm
 		private bool isFormStarted = false;
 		private FilterType activeFilter;
+		private bool workDetailsEdited = false;
 
 		public TaskStatisticsForm(Dictionary<string, List<TaskLogItem>> dailyTaskLogs)
         {
@@ -215,8 +216,24 @@ namespace TimeLogger
 				datasource = filterTaskLogsByGroup(this.detailedLogsGroupedByDay);
 				toggleControlsEnabled(true);
 			}
-			taskLogItemBindingSource.DataSource = datasource;
-		} 
+			List<TaskLogItem> ordered = datasource.OrderBy(x => x.groupName).ToList();
+			taskLogItemBindingSource.DataSource = ordered;
+			setDgvColumnPropeties();
+		}
+
+		private void setDgvColumnPropeties()
+		{
+			if (radioNet.Checked)
+			{
+				workDetailsDataGridViewTextBoxColumn.Width = 250;
+				workDetailsDataGridViewTextBoxColumn.HeaderText = "workDetails (double click to edit)";
+			}
+			else
+			{
+				workDetailsDataGridViewTextBoxColumn.Width = 450;
+				workDetailsDataGridViewTextBoxColumn.HeaderText = "workDetails";
+			}
+		}
 		#endregion
 
 		#region tworzenie słownika TaskLogItems grupowanych po miesiącu
@@ -393,6 +410,25 @@ namespace TimeLogger
 
 		#endregion
 
+		#region podwójny klik w komórce datagrida
+		private void dgv_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+		{
+			if (!radioNet.Checked)
+				return;
+			if (dgv.Columns[e.ColumnIndex].Name != "workDetailsDataGridViewTextBoxColumn")
+				return;
+			TaskLogItem selected = taskLogItemBindingSource.Current as TaskLogItem;
+			WorkDetailsEditForm editor = new WorkDetailsEditForm(selected);
+			editor.ShowDialog();
+			if (editor.DialogResult == DialogResult.OK)
+			{
+				this.workDetailsEdited = true;
+				taskLogItemBindingSource.ResetItem(taskLogItemBindingSource.IndexOf(taskLogItemBindingSource.Current));
+				editor.Close();
+			}
+		} 
+		#endregion
+
 		#region pomocnicze
 		private void toggleControlsEnabled(bool isEnabled)
 		{
@@ -400,7 +436,8 @@ namespace TimeLogger
 			buttonDelete.Enabled = isEnabled;
 			endTimeDataGridViewTextBoxColumn.Visible = isEnabled;
 			startTimeDataGridViewTextBoxColumn.Visible = isEnabled;
-		} 
+		}
 		#endregion
+
 	}
 }

@@ -83,6 +83,12 @@
     <Compile Include="TaskStatisticsForm.Designer.cs">
       <DependentUpon>TaskStatisticsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WorkDetailsEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WorkDetailsEditForm.Designer.cs">
+      <DependentUpon>WorkDetailsEditForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -104,6 +110,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TaskStatisticsForm.resx">
       <DependentUpon>TaskStatisticsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkDetailsEditForm.resx">
+      <DependentUpon>WorkDetailsEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\DataSources\TaskDictionaryItem.datasource" />
     <None Include="Properties\DataSources\TaskLogItem.datasource" />

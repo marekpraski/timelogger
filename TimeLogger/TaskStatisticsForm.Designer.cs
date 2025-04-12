@@ -30,13 +30,7 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TaskStatisticsForm));
-			this.dataGridView1 = new System.Windows.Forms.DataGridView();
-			this.groupNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.startTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.endTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.workDetailsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dgv = new System.Windows.Forms.DataGridView();
 			this.taskLogItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
 			this.comboDate = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
@@ -61,81 +55,43 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.comboYearMonth = new System.Windows.Forms.ComboBox();
 			this.label4 = new System.Windows.Forms.Label();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+			this.groupNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.startTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.endTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.workDetailsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.taskLogItemBindingSource)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
 			this.bindingNavigator1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// dataGridView1
+			// dgv
 			// 
-			this.dataGridView1.AllowUserToAddRows = false;
-			this.dataGridView1.AllowUserToDeleteRows = false;
-			this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.dgv.AllowUserToAddRows = false;
+			this.dgv.AllowUserToDeleteRows = false;
+			this.dgv.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.dataGridView1.AutoGenerateColumns = false;
-			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+			this.dgv.AutoGenerateColumns = false;
+			this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dgv.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.groupNameDataGridViewTextBoxColumn,
             this.descriptionDataGridViewTextBoxColumn,
             this.startTimeDataGridViewTextBoxColumn,
             this.endTimeDataGridViewTextBoxColumn,
             this.taskDurationInHoursMinutesDataGridViewTextBoxColumn,
             this.workDetailsDataGridViewTextBoxColumn});
-			this.dataGridView1.DataSource = this.taskLogItemBindingSource;
-			this.dataGridView1.Location = new System.Drawing.Point(9, 56);
-			this.dataGridView1.Name = "dataGridView1";
-			this.dataGridView1.ReadOnly = true;
-			this.dataGridView1.RowHeadersVisible = false;
-			this.dataGridView1.RowHeadersWidth = 51;
-			this.dataGridView1.Size = new System.Drawing.Size(918, 420);
-			this.dataGridView1.TabIndex = 0;
-			// 
-			// groupNameDataGridViewTextBoxColumn
-			// 
-			this.groupNameDataGridViewTextBoxColumn.DataPropertyName = "groupName";
-			this.groupNameDataGridViewTextBoxColumn.HeaderText = "groupName";
-			this.groupNameDataGridViewTextBoxColumn.Name = "groupNameDataGridViewTextBoxColumn";
-			this.groupNameDataGridViewTextBoxColumn.ReadOnly = true;
-			this.groupNameDataGridViewTextBoxColumn.Width = 150;
-			// 
-			// descriptionDataGridViewTextBoxColumn
-			// 
-			this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "description";
-			this.descriptionDataGridViewTextBoxColumn.HeaderText = "description";
-			this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-			this.descriptionDataGridViewTextBoxColumn.ReadOnly = true;
-			this.descriptionDataGridViewTextBoxColumn.Width = 200;
-			// 
-			// startTimeDataGridViewTextBoxColumn
-			// 
-			this.startTimeDataGridViewTextBoxColumn.DataPropertyName = "startTime";
-			this.startTimeDataGridViewTextBoxColumn.HeaderText = "startTime";
-			this.startTimeDataGridViewTextBoxColumn.Name = "startTimeDataGridViewTextBoxColumn";
-			this.startTimeDataGridViewTextBoxColumn.ReadOnly = true;
-			// 
-			// endTimeDataGridViewTextBoxColumn
-			// 
-			this.endTimeDataGridViewTextBoxColumn.DataPropertyName = "endTime";
-			this.endTimeDataGridViewTextBoxColumn.HeaderText = "endTime";
-			this.endTimeDataGridViewTextBoxColumn.Name = "endTimeDataGridViewTextBoxColumn";
-			this.endTimeDataGridViewTextBoxColumn.ReadOnly = true;
-			// 
-			// taskDurationInHoursMinutesDataGridViewTextBoxColumn
-			// 
-			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.DataPropertyName = "taskDurationInHoursMinutes";
-			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.HeaderText = "duration";
-			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.Name = "taskDurationInHoursMinutesDataGridViewTextBoxColumn";
-			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.ReadOnly = true;
-			// 
-			// workDetailsDataGridViewTextBoxColumn
-			// 
-			this.workDetailsDataGridViewTextBoxColumn.DataPropertyName = "workDetails";
-			this.workDetailsDataGridViewTextBoxColumn.HeaderText = "workDetails";
-			this.workDetailsDataGridViewTextBoxColumn.Name = "workDetailsDataGridViewTextBoxColumn";
-			this.workDetailsDataGridViewTextBoxColumn.ReadOnly = true;
-			this.workDetailsDataGridViewTextBoxColumn.Width = 250;
+			this.dgv.DataSource = this.taskLogItemBindingSource;
+			this.dgv.Location = new System.Drawing.Point(9, 56);
+			this.dgv.Name = "dgv";
+			this.dgv.ReadOnly = true;
+			this.dgv.RowHeadersVisible = false;
+			this.dgv.RowHeadersWidth = 51;
+			this.dgv.Size = new System.Drawing.Size(918, 420);
+			this.dgv.TabIndex = 0;
+			this.dgv.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellDoubleClick);
 			// 
 			// taskLogItemBindingSource
 			// 
@@ -371,6 +327,51 @@
 			this.label4.TabIndex = 11;
 			this.label4.Text = "Filter by:";
 			// 
+			// groupNameDataGridViewTextBoxColumn
+			// 
+			this.groupNameDataGridViewTextBoxColumn.DataPropertyName = "groupName";
+			this.groupNameDataGridViewTextBoxColumn.HeaderText = "groupName";
+			this.groupNameDataGridViewTextBoxColumn.Name = "groupNameDataGridViewTextBoxColumn";
+			this.groupNameDataGridViewTextBoxColumn.ReadOnly = true;
+			this.groupNameDataGridViewTextBoxColumn.Width = 150;
+			// 
+			// descriptionDataGridViewTextBoxColumn
+			// 
+			this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "description";
+			this.descriptionDataGridViewTextBoxColumn.HeaderText = "description";
+			this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
+			this.descriptionDataGridViewTextBoxColumn.ReadOnly = true;
+			this.descriptionDataGridViewTextBoxColumn.Width = 200;
+			// 
+			// startTimeDataGridViewTextBoxColumn
+			// 
+			this.startTimeDataGridViewTextBoxColumn.DataPropertyName = "startTime";
+			this.startTimeDataGridViewTextBoxColumn.HeaderText = "startTime";
+			this.startTimeDataGridViewTextBoxColumn.Name = "startTimeDataGridViewTextBoxColumn";
+			this.startTimeDataGridViewTextBoxColumn.ReadOnly = true;
+			// 
+			// endTimeDataGridViewTextBoxColumn
+			// 
+			this.endTimeDataGridViewTextBoxColumn.DataPropertyName = "endTime";
+			this.endTimeDataGridViewTextBoxColumn.HeaderText = "endTime";
+			this.endTimeDataGridViewTextBoxColumn.Name = "endTimeDataGridViewTextBoxColumn";
+			this.endTimeDataGridViewTextBoxColumn.ReadOnly = true;
+			// 
+			// taskDurationInHoursMinutesDataGridViewTextBoxColumn
+			// 
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.DataPropertyName = "taskDurationInHoursMinutes";
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.HeaderText = "duration";
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.Name = "taskDurationInHoursMinutesDataGridViewTextBoxColumn";
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.ReadOnly = true;
+			// 
+			// workDetailsDataGridViewTextBoxColumn
+			// 
+			this.workDetailsDataGridViewTextBoxColumn.DataPropertyName = "workDetails";
+			this.workDetailsDataGridViewTextBoxColumn.HeaderText = "workDetails (double click to edit)";
+			this.workDetailsDataGridViewTextBoxColumn.Name = "workDetailsDataGridViewTextBoxColumn";
+			this.workDetailsDataGridViewTextBoxColumn.ReadOnly = true;
+			this.workDetailsDataGridViewTextBoxColumn.Width = 250;
+			// 
 			// TaskStatisticsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -387,11 +388,11 @@
 			this.Controls.Add(this.radioDailyAggregates);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.comboDate);
-			this.Controls.Add(this.dataGridView1);
+			this.Controls.Add(this.dgv);
 			this.Name = "TaskStatisticsForm";
 			this.Text = "Task Statistics";
 			this.Load += new System.EventHandler(this.TaskStatisticsForm_Load);
-			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.taskLogItemBindingSource)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
 			this.bindingNavigator1.ResumeLayout(false);
@@ -403,7 +404,7 @@
 
 		#endregion
 
-		private System.Windows.Forms.DataGridView dataGridView1;
+		private System.Windows.Forms.DataGridView dgv;
 		private System.Windows.Forms.ComboBox comboDate;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.RadioButton radioDailyAggregates;
@@ -425,14 +426,14 @@
 		private System.Windows.Forms.ComboBox comboGroup;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.BindingSource taskLogItemBindingSource;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.ComboBox comboYearMonth;
+		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.DataGridViewTextBoxColumn groupNameDataGridViewTextBoxColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn startTimeDataGridViewTextBoxColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn endTimeDataGridViewTextBoxColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn taskDurationInHoursMinutesDataGridViewTextBoxColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn workDetailsDataGridViewTextBoxColumn;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.ComboBox comboYearMonth;
-		private System.Windows.Forms.Label label4;
 	}
 }
