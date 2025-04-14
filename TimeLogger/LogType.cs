@@ -1,10 +1,10 @@
 ﻿
 namespace TimeLogger
 {
-    internal enum LogType
+    public enum LogType
     {
         Detailed,
         AggregatedDaily,
-        AggregatedMonthly
-    }
+		AggregatedMonthly
+	}
 }

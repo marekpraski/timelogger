@@ -21,11 +21,16 @@ namespace TimeLogger
 			NetGroupYearmonth
 		}
 
-		private readonly Dictionary<string, List<TaskLogItem>> detailedLogsGroupedByDay;    //kluczem jest pełna data rrrr-mm-dd
-		private Dictionary<string, List<TaskLogItem>> detailedLogsGroupedByMonth;    //kluczem jest miesiąc rrrr-mm
+		/// <summary>
+		/// kompletny log netto, pogrupowany ale nie zagregowany, kluczem jest pełna data rrrr-mm-dd
+		/// </summary>
+		private readonly Dictionary<string, List<TaskLogItem>> detailedLogsGroupedByDay;
+		/// <summary>
+		/// kompletny log netto, pogrupowany ale nie zagregowany, kluczem jest rok-miesiąc rrrr-mm
+		/// </summary>
+		private Dictionary<string, List<TaskLogItem>> detailedLogsGroupedByMonth;
 		private bool isFormStarted = false;
 		private FilterType activeFilter;
-		private bool workDetailsEdited = false;
 
 		public TaskStatisticsForm(Dictionary<string, List<TaskLogItem>> dailyTaskLogs)
         {
@@ -306,22 +311,43 @@ namespace TimeLogger
 					filtered.Add(raw[i]);
 			}
 			return filtered;
-		} 
+		}
 		#endregion
 
 		#region aggregowanie danych
 
-		private Dictionary<string, List<TaskLogItem>> getAggregatedLog(Dictionary<string, List<TaskLogItem>> detailedLogs)
+		private List<Dictionary<string, List<TaskLogItem>>> getAggregatedLog(Dictionary<string, List<TaskLogItem>> detailedLogs)
+		{
+			List<Dictionary<string, List<TaskLogItem>>> l = new List<Dictionary<string, List<TaskLogItem>>>();
+			for (int i = 0; i < comboDate.Items.Count; i++)
+			{
+				string d = comboDate.Items[i].ToString();
+				l.Add(getAggregatedLogsPerGroup(detailedLogs, d));
+			}
+			return l;
+		}
+
+		/// <summary>
+		/// z przekazanego słownika logów, gdzie kluczem jest data, pobiera listę logów, dla której kluczem jest data przekazana jako parametr;
+		/// pracując na logach z tej listy zwraca słownik, gdzie kluczem jest nazwa grupy + nazwa zadania;
+		/// </summary>
+		private Dictionary<string, List<TaskLogItem>> getAggregatedLogsPerGroup(Dictionary<string, List<TaskLogItem>> detailedLogs, string date)
 		{
 			Dictionary<string, List<TaskLogItem>> dict = new Dictionary<string, List<TaskLogItem>>();
-			foreach (string date in detailedLogs.Keys)
+			foreach (string keyDate in detailedLogs.Keys)
 			{
-				if (date == comboDate.Text)
-					dict.Add(date, getAggregatedTasks(detailedLogs, date));
+				if (keyDate == date)
+					dict.Add(keyDate, getAggregatedTasks(detailedLogs, keyDate));
 			}
 			return dict;
 		}
 
+		/// <summary>
+		/// przyjmuje słownik, gdzie kluczem jest data; data jest również przekazana jako parametr;
+		/// na podstawie daty wyciąga właściwą listę logów z przekazanego słownika; z tej listy
+		/// wyciąga zadania spełniające kryterium grupy wybranej z kombo; te zadania po zagregowaniu
+		/// po nazwie grupy i opisie zwraca w postaci listy
+		/// </summary>
 		private List<TaskLogItem> getAggregatedTasks(Dictionary<string, List<TaskLogItem>> itemsDict, string date)
 		{
 			if (String.IsNullOrEmpty(date))
@@ -335,12 +361,19 @@ namespace TimeLogger
 				if (aggregated.ContainsKey(key))
 					tryAddTaskLogToAggregatedList(aggregated[key], itemsOnSelectedDate[i]);
 				else
-					tryAddTaskToAggregatedDictionary(aggregated, itemsOnSelectedDate[i]);
+					tryAddTaskListToAggregatedDictionary(aggregated, itemsOnSelectedDate[i]);
 			}
 			return splitDictionary(aggregated);
 		}
 
-		private void tryAddTaskToAggregatedDictionary(Dictionary<string, List<TaskLogItem>> aggregated, TaskLogItem taskLogItem)
+		private void tryAddTaskLogToAggregatedList(List<TaskLogItem> items, TaskLogItem taskLogItem)
+		{
+			if (comboGroup.SelectedIndex < 1 ||
+				(comboGroup.SelectedIndex > 0 && comboGroup.Text == taskLogItem.groupName))
+				items.Add(taskLogItem);
+		}
+
+		private void tryAddTaskListToAggregatedDictionary(Dictionary<string, List<TaskLogItem>> aggregated, TaskLogItem taskLogItem)
 		{
 			if (comboGroup.SelectedIndex < 1 ||
 				(comboGroup.SelectedIndex > 0 && comboGroup.Text == taskLogItem.groupName))
@@ -349,13 +382,6 @@ namespace TimeLogger
 				ts.Add(taskLogItem);
 				aggregated.Add(taskLogItem.groupName + taskLogItem.description, ts);
 			}
-		}
-
-		private void tryAddTaskLogToAggregatedList(List<TaskLogItem> items, TaskLogItem taskLogItem)
-		{
-			if (comboGroup.SelectedIndex < 1 || 
-				(comboGroup.SelectedIndex > 0 && comboGroup.Text == taskLogItem.groupName))
-				items.Add(taskLogItem);
 		}
 
 		private List<TaskLogItem> splitDictionary(Dictionary<string, List<TaskLogItem>> aggregated)
@@ -403,9 +429,21 @@ namespace TimeLogger
 		private void btnToCsv_Click(object sender, EventArgs e)
 		{
 			if (radioDailyAggregates.Checked)
+				new TaskLogManager().saveTaskLogs(LogType.AggregatedDaily, getAggregatedLogsPerGroup(this.detailedLogsGroupedByDay, comboDate.Text));
+			else if (radioMonthlyAggregates.Checked)
+				new TaskLogManager().saveTaskLogs(LogType.AggregatedMonthly, getAggregatedLogsPerGroup(this.detailedLogsGroupedByMonth, comboDate.Text));
+
+			MessageBox.Show("Saved");
+		}
+
+		private void btnToCsvAllDates_Click(object sender, EventArgs e)
+		{
+			if (radioDailyAggregates.Checked)
 				new TaskLogManager().saveTaskLogs(LogType.AggregatedDaily, getAggregatedLog(this.detailedLogsGroupedByDay));
 			else if (radioMonthlyAggregates.Checked)
 				new TaskLogManager().saveTaskLogs(LogType.AggregatedMonthly, getAggregatedLog(this.detailedLogsGroupedByMonth));
+
+			MessageBox.Show("Saved");
 		}
 
 		#endregion
@@ -422,7 +460,6 @@ namespace TimeLogger
 			editor.ShowDialog();
 			if (editor.DialogResult == DialogResult.OK)
 			{
-				this.workDetailsEdited = true;
 				taskLogItemBindingSource.ResetItem(taskLogItemBindingSource.IndexOf(taskLogItemBindingSource.Current));
 				editor.Close();
 			}

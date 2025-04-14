@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Text;
 
 namespace TimeLogger
@@ -84,17 +85,31 @@ namespace TimeLogger
 		/// <summary>
 		/// "id;date;groupName;description;timeHourMinutes;timeInMinutes;details"
 		/// </summary>
-		public string toStringAggregated()
+		public string toStringAggregated(LogType logType)
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append(id); sb.Append(";");
-			sb.Append(date); sb.Append(";");
+			appendDate(sb, logType);			
 			sb.Append(groupName); sb.Append(";");
 			sb.Append(description); sb.Append(";");
 			sb.Append(getHoursMinutes()); sb.Append(";");
 			sb.Append(timeInMinutes); sb.Append(";");
 			sb.Append(workDetails);
 			return sb.ToString();
+		}
+
+		private void appendDate(StringBuilder sb, LogType logType)
+		{
+			if (logType == LogType.AggregatedDaily)
+			{
+				sb.Append(date); 
+				sb.Append(";");
+			}
+			if (logType == LogType.AggregatedMonthly)
+			{
+				sb.Append(yearMonth); 
+				sb.Append(";");
+			}
 		}
 
 		/// <summary>

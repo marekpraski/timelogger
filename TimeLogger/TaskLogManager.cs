@@ -31,18 +31,27 @@ namespace TimeLogger
 			return taskLogs;
 		}
 
-		internal void saveTaskLogs(LogType logType, Dictionary<string, List<TaskLogItem>> taskLogs)
-		{
-			saveFileAsynch(logType, taskLogs);
-		}
-
-		private void saveFileAsynch(LogType logType, Dictionary<string, List<TaskLogItem>> taskLogs)
+		internal void saveTaskLogs(LogType logType, List<Dictionary<string, List<TaskLogItem>>> taskLogDics)
 		{
 			string logFileName = getLogFileName(logType);
 			string csvFileHeader = getCsvFileHeader(logType);
 			StringBuilder sb = new StringBuilder();
 			sb.AppendLine(csvFileHeader);
+			
+			for (int k = 0; k < taskLogDics.Count; k++)
+			{
+				processOneDictionary(logType, taskLogDics[k], sb);
+			}
+			File.WriteAllText(logFileName, sb.ToString());
+		}
 
+		internal void saveTaskLogs(LogType logType, Dictionary<string, List<TaskLogItem>> taskLogs)
+		{
+			saveTaskLogs(logType, new List<Dictionary<string, List<TaskLogItem>>> { taskLogs });
+		}
+
+		private void processOneDictionary(LogType logType, Dictionary<string, List<TaskLogItem>> taskLogs, StringBuilder sb)
+		{
 			foreach (string date in taskLogs.Keys)
 			{
 				List<TaskLogItem> l = taskLogs[date];
@@ -52,7 +61,6 @@ namespace TimeLogger
 					sb.AppendLine(entry);
 				}
 			}
-			File.WriteAllText(logFileName, sb.ToString());
 		}
 
 		private string getLogEntry(TaskLogItem logItem, LogType logType)
@@ -60,7 +68,7 @@ namespace TimeLogger
 			if (logType == LogType.Detailed)
 				return logItem.toStringDetailed();
 
-			return logItem.toStringAggregated();
+			return logItem.toStringAggregated(logType);
 		}
 
 		private string getCsvFileHeader(LogType logType)
