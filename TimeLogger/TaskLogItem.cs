@@ -4,14 +4,14 @@ using System.Text;
 
 namespace TimeLogger
 {
-    public class TaskLogItem
-    {
+	public class TaskLogItem
+	{
 		public static string csvHeaderFull = "id;description;date;startTime;endTime;groupName;details;timeInMinutes";
 		public static string csvHeaderAggregate = "id;date;groupName;description;timeHourMinutes;timeInMinutes;details";
-		public int id  = 0;
-        public string description { get; set; }
+		public int id = 0;
+		public string description { get; set; }
 		public string workDetails { get; set; }
-        public string groupName { get; set; }
+		public string groupName { get; set; }
 		/// <summary>
 		/// data w formacie rrrr-mm-dd ustawiana w konstruktorze z DateTime.Now
 		/// </summary>
@@ -22,7 +22,7 @@ namespace TimeLogger
 		public string yearMonth { get => getYearMonth(); }
 
 		/// <summary>
-		/// wykorzystuję w statystykach, nie może być dynamicznie aktualizowana w czasie życia obiektu
+		/// wykorzystuję w statystykach, nie może być dynamicznie obliczany jako różnica czasu startu i końca
 		/// </summary>
 		private int timeInMinutes = 0;
 
@@ -35,11 +35,11 @@ namespace TimeLogger
 		/// czas zadania w formacie hh:mm
 		/// </summary>
 		public string taskDurationInHoursMinutes { get => getHoursMinutes(); }
-		public string startTime { get => extractTime(startDateTime) ; }
+		public string startTime { get => extractTime(startDateTime); }
 		public string endTime { get => extractTime(endDateTime); }
 
-		private DateTime startDateTime = DateTime.Now;
-        private DateTime endDateTime = DateTime.Now;
+		public DateTime startDateTime { get; set; } = DateTime.Now;
+		public DateTime endDateTime { get; set; } = DateTime.Now;
 
 		/// <summary>
 		/// nowy na podstawie elementu słownikowego
@@ -65,6 +65,11 @@ namespace TimeLogger
 			this.endDateTime = endTime;
 		}
 
+		internal void setStartTime(DateTime startTime)
+		{
+			this.startDateTime = startTime;
+		}
+
 		/// <summary>
 		/// "id;description;date;startTime;endTime;groupName;details;timeInMinutes"
 		/// </summary>
@@ -78,7 +83,7 @@ namespace TimeLogger
             sb.Append(endDateTime.ToString()); sb.Append(";");
 			sb.Append(groupName); sb.Append(";");
 			sb.Append(workDetails); sb.Append(";");
-			sb.Append(timeInMinutes);
+			sb.Append(taskDurationInMinutes);
 			return sb.ToString();
         }
 
@@ -120,6 +125,11 @@ namespace TimeLogger
 		{
 			this.workDetails = "";
 			this.timeInMinutes = 0;
+		}
+
+		internal void setTimeInMinutes()
+		{
+			this.timeInMinutes = getTimeInMinutes();
 		}
 
 		internal TaskLogItem clone()
@@ -166,11 +176,6 @@ namespace TimeLogger
 			workDetails = s[6];
 		}
 
-		private void setTimeInMinutes()
-		{
-			this.timeInMinutes = getTimeInMinutes();
-		}
-
 		private int getTimeInMinutes()
 		{
 			return Convert.ToInt32(endDateTime.Subtract(startDateTime).TotalMinutes);
@@ -208,5 +213,6 @@ namespace TimeLogger
 				return "0" + number.ToString();
 			return number.ToString();
 		}
+
 	}
 }

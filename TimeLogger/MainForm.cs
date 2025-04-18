@@ -194,6 +194,7 @@ namespace TimeLogger
 				return;
 
 			this.currentTaskLogItem.setEndTime(DateTime.Now);
+			this.currentTaskLogItem.setTimeInMinutes();
 			this.currentTaskLogItem.setWorkDetails(tbWorkDetails.Text);
 		}
 

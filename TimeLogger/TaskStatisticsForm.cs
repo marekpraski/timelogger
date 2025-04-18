@@ -220,9 +220,9 @@ namespace TimeLogger
 			{
 				datasource = filterTaskLogsByGroup(this.detailedLogsGroupedByDay);
 				toggleControlsEnabled(true);
-			}
+			}			
 			List<TaskLogItem> ordered = datasource.OrderBy(x => x.groupName).ToList();
-			taskLogItemBindingSource.DataSource = ordered;
+			taskLogItemBindingSource.DataSource = activeFilter == FilterType.Net ? datasource : ordered;
 			setDgvColumnPropeties();
 		}
 
@@ -451,12 +451,12 @@ namespace TimeLogger
 		#region podwójny klik w komórce datagrida
 		private void dgv_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
-			if (!radioNet.Checked)
+			if (activeFilter != FilterType.Net)
 				return;
-			if (dgv.Columns[e.ColumnIndex].Name != "workDetailsDataGridViewTextBoxColumn")
+			if (dgv.Columns[e.ColumnIndex].Name == "taskDurationInHoursMinutes")
 				return;
 			TaskLogItem selected = taskLogItemBindingSource.Current as TaskLogItem;
-			WorkDetailsEditForm editor = new WorkDetailsEditForm(selected);
+			WorkDetailsEditForm editor = new WorkDetailsEditForm(selected, e.ColumnIndex);
 			editor.ShowDialog();
 			if (editor.DialogResult == DialogResult.OK)
 			{
