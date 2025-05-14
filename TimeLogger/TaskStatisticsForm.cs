@@ -224,6 +224,65 @@ namespace TimeLogger
 			List<TaskLogItem> ordered = datasource.OrderBy(x => x.groupName).ToList();
 			taskLogItemBindingSource.DataSource = activeFilter == FilterType.Net ? datasource : ordered;
 			setDgvColumnPropeties();
+			setTimeLoggedLabelText(datasource);
+		}
+
+		private void setTimeLoggedLabelText(List<TaskLogItem> datasource)
+		{
+			if (radioNet.Checked)
+				toolStripLabelTimeLogged.Text = getTimeFromMinutes(datasource);
+			else
+				toolStripLabelTimeLogged.Text = getTimeFromHoursMinutes(datasource);
+
+		}
+
+		private string getTimeFromHoursMinutes(List<TaskLogItem> datasource)
+		{
+			int time = 0;
+			for (int i = 0; i < datasource.Count; i++)
+			{
+				time += convertToMinutes(datasource[i].taskDurationInHoursMinutes);
+			}
+			return getHoursMinutes(time);
+		}
+
+		private int convertToMinutes(string hoursMinutes)
+		{
+			//hours + " hr  " + minutes + " min"
+			int endIndexHr = hoursMinutes.IndexOf(" hr");
+			int endIndexMinutes = hoursMinutes.IndexOf(" min");
+
+			if (endIndexHr == -1)
+			{
+				string m = hoursMinutes.Substring(0, endIndexMinutes);
+				return Convert.ToInt32(hoursMinutes.Substring(0, endIndexMinutes));
+			}
+			
+			string hr = hoursMinutes.Substring(0, endIndexHr);
+			int startIndexMinutes = endIndexHr + 5;
+			string min = hoursMinutes.Substring(startIndexMinutes, hoursMinutes.Length - endIndexMinutes - 2);
+
+			return 60 * Convert.ToInt32(hr) + Convert.ToInt32(min);
+		}
+
+		private string getTimeFromMinutes(List<TaskLogItem> datasource)
+		{
+			int time = 0;
+			for (int i = 0; i < datasource.Count; i++)
+			{
+				time += datasource[i].taskDurationInMinutes;
+			}
+			return getHoursMinutes(time);
+		}
+
+		private string getHoursMinutes(int minutesTotal)
+		{
+			int hours = minutesTotal / 60;
+			if (hours == 0)
+				return minutesTotal + " min";
+
+			int minutes = minutesTotal - hours * 60;
+			return "total time logged: " + hours + " hr  " + minutes + " min";
 		}
 
 		private void setDgvColumnPropeties()

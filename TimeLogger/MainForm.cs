@@ -249,8 +249,7 @@ namespace TimeLogger
 			}
 			TaskStatisticsForm sf = new TaskStatisticsForm(taskLogs);
 			sf.ShowDialog();
-			if (sf.DialogResult == DialogResult.OK)
-				initializeProperties();
+			reloadControls();
 		}
 
 		private void groupsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -258,6 +257,7 @@ namespace TimeLogger
 			stopCurrentTask();
 			GroupsForm df = new GroupsForm();
 			df.ShowDialog();
+			reloadControls();
 		} 
 		#endregion
 

@@ -62,6 +62,7 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.comboYearMonth = new System.Windows.Forms.ComboBox();
 			this.label4 = new System.Windows.Forms.Label();
+			this.toolStripLabelTimeLogged = new System.Windows.Forms.ToolStripLabel();
 			((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.taskLogItemBindingSource)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
@@ -217,7 +218,8 @@
             this.buttonDelete,
             this.buttonSave,
             this.btnToCsv,
-            this.btnToCsvAllDates});
+            this.btnToCsvAllDates,
+            this.toolStripLabelTimeLogged});
 			this.bindingNavigator1.Location = new System.Drawing.Point(0, 0);
 			this.bindingNavigator1.MoveFirstItem = this.bindingNavigatorMoveFirstItem;
 			this.bindingNavigator1.MoveLastItem = this.bindingNavigatorMoveLastItem;
@@ -384,6 +386,12 @@
 			this.label4.TabIndex = 11;
 			this.label4.Text = "Filter by:";
 			// 
+			// toolStripLabelTimeLogged
+			// 
+			this.toolStripLabelTimeLogged.Name = "toolStripLabelTimeLogged";
+			this.toolStripLabelTimeLogged.Size = new System.Drawing.Size(71, 24);
+			this.toolStripLabelTimeLogged.Text = "time logged";
+			// 
 			// TaskStatisticsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -448,5 +456,6 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn taskDurationInHoursMinutesDataGridViewTextBoxColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn workDetailsDataGridViewTextBoxColumn;
 		private System.Windows.Forms.ToolStripButton btnToCsvAllDates;
+		private System.Windows.Forms.ToolStripLabel toolStripLabelTimeLogged;
 	}
 }
