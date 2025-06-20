@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Eventing.Reader;
 using System.Text;
 
 namespace TimeLogger
@@ -9,9 +8,18 @@ namespace TimeLogger
 		public static string csvHeaderFull = "id;description;date;startTime;endTime;groupName;details;timeInMinutes";
 		public static string csvHeaderAggregate = "id;date;groupName;description;timeHourMinutes;timeInMinutes;details";
 		public int id = 0;
-		public string description { get; set; }
-		public string workDetails { get; set; }
-		public string groupName { get; set; }
+		public WorkDetailsItem workDetailsObject { get; set; } = new WorkDetailsItem();
+		/// <summary>
+		/// szczegóły zadania
+		/// </summary>
+		public string workDetails { get => workDetailsObject.description; }
+		public TaskDefinitionItem taskDefinitionItem { get; set; } = new TaskDefinitionItem();
+
+		public string groupName { get => this.taskDefinitionItem.groupName; }
+		/// <summary>
+		/// nazwa zadania, zwraca taskDefinitionItem.description
+		/// </summary>
+		public string description { get => this.taskDefinitionItem.description; }
 		/// <summary>
 		/// data w formacie rrrr-mm-dd ustawiana w konstruktorze z DateTime.Now
 		/// </summary>
@@ -47,8 +55,7 @@ namespace TimeLogger
 		public TaskLogItem(TaskDefinitionItem taskDefinition)
 		{
             setDate(DateTime.Now);
-            this.groupName = taskDefinition.groupName;
-            this.description = taskDefinition.description;
+			this.taskDefinitionItem = taskDefinition;
 		}
 
 		/// <summary>
@@ -123,7 +130,7 @@ namespace TimeLogger
 		/// </summary>
 		internal void clearTimeInMinutesAndWorkDetails()
 		{
-			this.workDetails = "";
+			this.workDetailsObject.description = "";
 			this.timeInMinutes = 0;
 		}
 
@@ -141,7 +148,7 @@ namespace TimeLogger
 		{
 			this.timeInMinutes += other.timeInMinutes;
 			if (!String.IsNullOrEmpty(other.workDetails))
-				this.workDetails += addLineBreak() + other.workDetails;
+				this.workDetailsObject.description += addLineBreak() + other.workDetails;
 		}
 
 		private string addLineBreak()
@@ -154,7 +161,7 @@ namespace TimeLogger
 
 		internal void setWorkDetails(string text)
 		{
-			this.workDetails = text;
+			this.workDetailsObject.description = text;
 		}
 
 		private string extractTime(DateTime dt)
@@ -168,12 +175,12 @@ namespace TimeLogger
         {
             string[] s = taskLogItemAsString.Split(';');
             id = Convert.ToInt32(s[0]);
-            description = s[1];
+            taskDefinitionItem.description = s[1];
             date = s[2];
             startDateTime = DateTime.Parse(s[3]);
             endDateTime = DateTime.Parse(s[4]);
-			groupName = s[5];
-			workDetails = s[6];
+			taskDefinitionItem.groupName = s[5];
+			workDetailsObject.description = s[6];
 		}
 
 		private int getTimeInMinutes()

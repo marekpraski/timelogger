@@ -28,18 +28,21 @@ namespace TimeLogger
 		private void loadCombo()
 		{
 			comboGroups.Items.Clear();
-			for (int i = 0; i < groupManager.groupNames.Count; i++)
+			for (int i = 0; i < groupManager.activeGroupsNames.Count; i++)
 			{
-				comboGroups.Items.Add(groupManager.groupNames[i]);
+				comboGroups.Items.Add(groupManager.activeGroupsNames[i]);
 			}
 
-			if (groupManager.groupNames.Count > 0)
+			if (groupManager.activeGroupsNames.Count > 0)
 				comboGroups.SelectedIndex = 0;
 		}
 
 		private void loadDgv()
 		{
-			taskDictionaryItemBindingSource.DataSource = this.definitionsManager.taskDefinitions;
+			if (checkActiveGroups.Checked)
+				taskDictionaryItemBindingSource.DataSource = this.definitionsManager.taskDefinitionsActiveGroups;
+			else
+				taskDictionaryItemBindingSource.DataSource = this.definitionsManager.taskDefinitionsAll;
 		}
 
 		private void addToolStripMenuItem_Click(object sender, EventArgs e)
@@ -104,5 +107,9 @@ namespace TimeLogger
 			}
 		}
 
+		private void checkActiveGroups_CheckedChanged(object sender, EventArgs e)
+		{
+			loadDgv();
+		}
 	}
 }

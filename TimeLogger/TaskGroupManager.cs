@@ -11,32 +11,41 @@ namespace TimeLogger
 		/// <summary>
 		/// lista grup czytana z pliku txt i tworzona podczas tworzenia obiektu TaskGroupManager
 		/// </summary>
-		public List<string> groupNames { get; }
+		public List<string> activeGroupsNames { get; } = new List<string>();
+		public List<Group> groups { get; } = new List<Group>();
 
 		public TaskGroupManager()
 		{
-			groupNames = new List<string>();
 			readGroups();
+			getGroupNames();
+		}
+
+		private void getGroupNames()
+		{
+			for (int i = 0; i < groups.Count; i++)
+			{
+				if (groups[i].isActive)
+					activeGroupsNames.Add(groups[i].name);
+			}
 		}
 
 		private void readGroups()
 		{
 			if (!File.Exists(groupsFileName))
 				return;
-			string s = File.ReadAllText(groupsFileName);
-			string[] grs = s.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+			string[] lines = File.ReadAllLines(groupsFileName);
 
-			for (int i = 0; i < grs.Length; i++)
+			for (int i = 0; i < lines.Length; i++)
 			{
-				groupNames.Add(grs[i]);
+				groups.Add(new Group(lines[i]));
 			}
 		}
 
-		internal bool saveGroups(string groupNamesAsString)
+		internal bool saveGroups(List<string> groupLines)
 		{
 			try
 			{
-				File.WriteAllText(groupsFileName, groupNamesAsString);
+				File.WriteAllLines(groupsFileName, groupLines);
 				return true;
 			}
 			catch (Exception e)
@@ -44,6 +53,13 @@ namespace TimeLogger
 				MessageBox.Show(e.ToString());
 				return false;				
 			}
+		}
+
+		internal bool isTaskGroupActive(TaskDefinitionItem item)
+		{
+			if (this.activeGroupsNames.Contains(item.groupName))
+				return true;
+			return false;
 		}
 	}
 }

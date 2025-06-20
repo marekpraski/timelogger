@@ -11,14 +11,20 @@ namespace TimeLogger
 		{
 			AggregatedDay,
 			AggregatedDayGroup,
+			AggregatedDayGroupTask,
 			AggregatedDayYearmonth,
 			AggregatedDayGroupYearmonth,
+			AggregatedDayGroupTaskYearmonth,
 			AggregatedMonth,
 			AggregatedMonthGroup,
+			AggregatedMonthGroupTask,
 			Net,
 			NetGroup,
+			NetGroupTask,
 			NetYearmonth,
-			NetGroupYearmonth
+			NetGroupYearmonth,
+			NetGroupTaskYearmonth,
+			Undefined
 		}
 
 		/// <summary>
@@ -31,6 +37,7 @@ namespace TimeLogger
 		private Dictionary<string, List<TaskLogItem>> detailedLogsGroupedByMonth;
 		private bool isFormStarted = false;
 		private FilterType activeFilter;
+		private TaskDefinitionsManager TaskDefinitionsManager;
 
 		public TaskStatisticsForm(Dictionary<string, List<TaskLogItem>> dailyTaskLogs)
         {
@@ -38,15 +45,27 @@ namespace TimeLogger
 			this.detailedLogsGroupedByDay = dailyTaskLogs;
 			detailedLogsGroupedByMonth = groupTaskLogsByMonth();
 			this.activeFilter = FilterType.AggregatedDay;
+			this.TaskDefinitionsManager = new TaskDefinitionsManager();
+			comboTask.Enabled = false;
 		}
 
 		#region metody na starcie
 		private void TaskStatisticsForm_Load(object sender, EventArgs e)
 		{
+			fillComboAggregation();
 			fillComboGroup();
 			fillComboYearMonth();
 			fillComboDate();
 			isFormStarted = true;
+			loadDgv();
+		}
+
+		private void fillComboAggregation()
+		{
+			comboAggregationType.Items.Add("aggregated daily");
+			comboAggregationType.Items.Add("aggregated monthly");
+			comboAggregationType.Items.Add("net");
+			comboAggregationType.SelectedIndex = 0;
 		}
 		#endregion
 
@@ -123,15 +142,19 @@ namespace TimeLogger
 			return false;
 		}
 
+		/// <summary>
+		/// ta metoda powoduje ładowanie datagrida dwa razy 1. gdy ustawiam źródło danych kombo dat
+		/// 2. gdy wybieram konkretną datę
+		/// </summary>
 		private void loadComboDates(List<string> dates)
 		{
 			string selected = comboDate.Text;
 			List<string> sorted = dates.OrderByDescending(i => i).ToList();
-			comboDate.DataSource = sorted;
 			if (sorted.Count == 0)
 				return;
-			int index = comboDate.FindStringExact(selected);
-			comboDate.SelectedIndex = index < 0 ? 0 : index;
+			comboDate.DataSource = sorted;	//ustawia datę na pierwszą z góry
+			int index = comboDate.FindStringExact(selected);   //a ja przy zmianie grupy chcę uzyskać dane dla tej grupy przy już wybranej dacie
+			comboDate.SelectedIndex = index < 0 ? 0 : index;	//chociaż powoduje to przeładowanie datagrida
 		}
 
 		private void fillComboYearMonth()
@@ -154,7 +177,7 @@ namespace TimeLogger
 		{
 			comboGroup.Items.Clear();
 			comboGroup.Items.Add("--All--");
-			List<string> groups = new TaskGroupManager().groupNames;
+			List<string> groups = new TaskGroupManager().activeGroupsNames;
 			for (int i = 0; i < groups.Count; i++)
 			{
 				comboGroup.Items.Add(groups[i]);
@@ -166,13 +189,57 @@ namespace TimeLogger
 		#region zmiana wyboru w kombo grup
 		private void comboGroup_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (!isFormStarted)
-				return;
-			setActiveFilter();
-			fillComboDate();
-			loadDgv();
+			if (!tryFillComboTasks())  //gdy kombo zadań się wypełni poprawnie, filtr ustawia się w zdarzeniu SelectedIndexChanged kombo zadań
+				setActiveFilter();
+			fillComboDate();  //datagrida ładuje w zdarzeniu zmiany daty
 		}
 
+		#endregion
+
+		#region wypełnianie kombo zadań
+		private bool tryFillComboTasks()
+		{
+			if (comboGroup.SelectedIndex == 0)
+			{
+				comboTask.SelectedIndex = -1;
+				comboTask.Text = "";
+				comboTask.Enabled = false;
+				return false;
+			}
+			else
+			{
+				comboTask.Enabled = true;
+				List<TaskDefinitionItem> groupTasks = this.TaskDefinitionsManager.getGroupTasks(comboGroup.Text);
+				fillComboTasks(groupTasks);
+				return true;
+			}
+		}
+
+		private void fillComboTasks(List<TaskDefinitionItem> tasks)
+		{
+			comboTask.Items.Clear();
+			comboTask.Items.Add("--All--");
+			for (int i = 0; i < tasks.Count; i++)
+			{
+				comboTask.Items.Add(tasks[i].description);
+			}
+			comboTask.SelectedIndex = 0;
+		}
+		#endregion
+
+		#region zmiana wyboru kombo zadań
+		private void comboTask_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			setActiveFilter();
+			if (this.activeFilter == FilterType.NetGroupTask || 
+				this.activeFilter == FilterType.NetGroup || 
+				this.activeFilter == FilterType.NetGroupTaskYearmonth ||
+				this.activeFilter == FilterType.AggregatedDayGroupTask ||
+				this.activeFilter == FilterType.AggregatedDayGroupTaskYearmonth ||
+				this.activeFilter == FilterType.AggregatedMonthGroupTask
+				)
+				loadDgv();
+		} 
 		#endregion
 
 		#region zmiana wyboru kombo dat
@@ -184,16 +251,22 @@ namespace TimeLogger
 		private void comboYearMonth_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			setActiveFilter();
-			fillComboDate();
+			if (this.activeFilter == FilterType.NetGroupYearmonth ||
+				this.activeFilter == FilterType.NetGroupTaskYearmonth ||
+				this.activeFilter == FilterType.AggregatedDayYearmonth ||
+				this.activeFilter == FilterType.AggregatedDayGroupYearmonth ||
+				this.activeFilter == FilterType.AggregatedDayGroupTaskYearmonth
+				)
+				fillComboDate();
 		}
 		#endregion
 
-		#region zmiana wyboru radiobuttona
-		private void radio_CheckedChanged(object sender, EventArgs e)
+		#region zmiana wyboru w kombo typu agregacji
+		private void comboAggregationType_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			setActiveFilter();
 
-			if (radioNet.Checked)
+			if (comboAggregationType.Text == "net")
 			{
 				btnToCsv.Enabled = false;
 				comboGroup.SelectedIndex = 0;
@@ -201,24 +274,25 @@ namespace TimeLogger
 			else
 				btnToCsv.Enabled = true;
 
-			fillComboDate();
-			loadDgv();
+			fillComboDate();  //datagrida ładuje w zdarzeniu zmiany daty
 		}
 		#endregion
 
 		#region ładowanie danych do datagrida
 		private void loadDgv()
 		{
+			if (!isFormStarted)	//inaczej ładuje na starcie kilka razy, przy ładowaniu każdego kombo
+				return;
 			toggleControlsEnabled(false);
 			List<TaskLogItem> datasource;
 
-			if (radioDailyAggregates.Checked)
+			if (comboAggregationType.Text == "daily")
 				datasource = getAggregatedTasks(detailedLogsGroupedByDay, comboDate.Text);
-			else if (radioMonthlyAggregates.Checked)
+			else if (comboAggregationType.Text == "monthly")
 				datasource = getAggregatedTasks(detailedLogsGroupedByMonth, comboDate.Text);
 			else
 			{
-				datasource = filterTaskLogsByGroup(this.detailedLogsGroupedByDay);
+				datasource = getFilteredTaskLogs(this.detailedLogsGroupedByDay);
 				toggleControlsEnabled(true);
 			}			
 			List<TaskLogItem> ordered = datasource.OrderBy(x => x.groupName).ToList();
@@ -229,7 +303,7 @@ namespace TimeLogger
 
 		private void setTimeLoggedLabelText(List<TaskLogItem> datasource)
 		{
-			if (radioNet.Checked)
+			if (comboAggregationType.Text == "net")
 				toolStripLabelTimeLogged.Text = getTimeFromMinutes(datasource);
 			else
 				toolStripLabelTimeLogged.Text = getTimeFromHoursMinutes(datasource);
@@ -287,7 +361,7 @@ namespace TimeLogger
 
 		private void setDgvColumnPropeties()
 		{
-			if (radioNet.Checked)
+			if (comboAggregationType.Text == "net")
 			{
 				workDetailsDataGridViewTextBoxColumn.Width = 250;
 				workDetailsDataGridViewTextBoxColumn.HeaderText = "workDetails (double click to edit)";
@@ -333,29 +407,73 @@ namespace TimeLogger
 		{
 			if (!this.isFormStarted)
 				return;
-			if (radioNet.Checked && comboGroup.SelectedIndex == 0 && comboYearMonth.SelectedIndex == 0)
-				this.activeFilter = FilterType.Net;
-			else if (radioNet.Checked && comboGroup.SelectedIndex > 0 && comboYearMonth.SelectedIndex == 0)
-				this.activeFilter = FilterType.NetGroup;
-			else if (radioNet.Checked && comboGroup.SelectedIndex == 0 && comboYearMonth.SelectedIndex > 0)
-				this.activeFilter = FilterType.NetYearmonth;
-			else if (radioNet.Checked && comboGroup.SelectedIndex > 0 && comboYearMonth.SelectedIndex > 0)
-				this.activeFilter = FilterType.NetGroupYearmonth;
-			else if (radioDailyAggregates.Checked && comboGroup.SelectedIndex == 0 && comboYearMonth.SelectedIndex == 0)
-				this.activeFilter = FilterType.AggregatedDay;
-			else if (radioDailyAggregates.Checked && comboGroup.SelectedIndex > 0 && comboYearMonth.SelectedIndex == 0)
-				this.activeFilter = FilterType.AggregatedDayGroup;
-			else if (radioDailyAggregates.Checked && comboGroup.SelectedIndex == 0 && comboYearMonth.SelectedIndex > 0)
-				this.activeFilter = FilterType.AggregatedDayYearmonth;
-			else if (radioDailyAggregates.Checked && comboGroup.SelectedIndex > 0 && comboYearMonth.SelectedIndex > 0)
-				this.activeFilter = FilterType.AggregatedDayGroupYearmonth;
-			else if (radioMonthlyAggregates.Checked && comboGroup.SelectedIndex == 0)
-				this.activeFilter = FilterType.AggregatedMonth;
-			else if (radioMonthlyAggregates.Checked && comboGroup.SelectedIndex > 0)
-				this.activeFilter = FilterType.AggregatedMonthGroup;
+			if (comboAggregationType.Text.Contains("net"))
+				setNetFilter();
+			else if (comboAggregationType.Text.Contains("daily"))
+				setAggregateDailyFilter();
+			else if (comboAggregationType.Text.Contains("monthly"))
+				setAggregateMonhtlyFilter();
 		}
 
-		private List<TaskLogItem> filterTaskLogsByGroup(Dictionary<string, List<TaskLogItem>> items)
+		private void setNetFilter()
+		{
+			if (comboGroup.SelectedIndex == 0)
+				this.activeFilter = applyYearMonthCondition(FilterType.Net);
+			else if (comboGroup.SelectedIndex > 0 && comboTask.SelectedIndex == 0)
+				this.activeFilter = applyYearMonthCondition(FilterType.NetGroup);
+			else if (comboGroup.SelectedIndex > 0 && comboTask.SelectedIndex > 0)
+				this.activeFilter = applyYearMonthCondition(FilterType.NetGroupTask);
+		}
+
+		private void setAggregateDailyFilter()
+		{
+			if (comboGroup.SelectedIndex == 0)
+				this.activeFilter = applyYearMonthCondition(FilterType.AggregatedDay);
+			else if (comboGroup.SelectedIndex > 0 && comboTask.SelectedIndex == 0)
+				this.activeFilter = applyYearMonthCondition(FilterType.AggregatedDayGroup);
+			else if (comboGroup.SelectedIndex > 0 && comboTask.SelectedIndex > 0)
+				this.activeFilter = applyYearMonthCondition(FilterType.AggregatedDayGroupTask);
+		}
+
+		private void setAggregateMonhtlyFilter()
+		{
+			if (comboGroup.SelectedIndex == 0)
+				this.activeFilter = FilterType.AggregatedMonth;
+			else if (comboGroup.SelectedIndex > 0 && comboTask.SelectedIndex == 0)
+				this.activeFilter = FilterType.AggregatedMonthGroup;
+			else if (comboGroup.SelectedIndex > 0 && comboTask.SelectedIndex > 0)
+				this.activeFilter = FilterType.AggregatedMonthGroupTask;
+		}
+
+		private FilterType applyYearMonthCondition(FilterType groupTaskFilter)
+		{
+			if (comboYearMonth.SelectedIndex == 0)
+				return groupTaskFilter;
+			return getYearMonthFilter(groupTaskFilter);
+		}
+
+		private FilterType getYearMonthFilter(FilterType groupTaskFilter)
+		{
+			switch (groupTaskFilter)
+			{
+				case FilterType.Net:
+					return FilterType.NetYearmonth;
+				case FilterType.NetGroup:
+					return FilterType.NetGroupYearmonth;
+				case FilterType.NetGroupTask:
+					return FilterType.NetGroupTaskYearmonth;
+				case FilterType.AggregatedDay:
+					return FilterType.AggregatedDayYearmonth;
+				case FilterType.AggregatedDayGroup:
+					return FilterType.AggregatedDayGroupYearmonth;
+				case FilterType.AggregatedDayGroupTask:
+					return FilterType.AggregatedDayGroupTaskYearmonth;
+				default:
+					return FilterType.Undefined;
+			}
+		}
+
+		private List<TaskLogItem> getFilteredTaskLogs(Dictionary<string, List<TaskLogItem>> items)
 		{
 			if (String.IsNullOrEmpty(comboDate.Text))
 				return null;
@@ -366,11 +484,35 @@ namespace TimeLogger
 			List<TaskLogItem> filtered = new List<TaskLogItem>();
 			for (int i = 0; i < raw.Count; i++)
 			{
-				if (raw[i].groupName == comboGroup.Text)
-					filtered.Add(raw[i]);
+				tryAddFiltered(filtered, raw[i]);
 			}
 			return filtered;
 		}
+
+		private void tryAddFiltered(List<TaskLogItem> filtered, TaskLogItem item)
+		{
+			if (this.activeFilter == FilterType.Net)
+				filtered.Add(item);
+			if (this.activeFilter == FilterType.NetGroup || this.activeFilter == FilterType.NetGroupYearmonth)
+				tryAddFilteredByGroup(filtered, item);
+			else if (this.activeFilter == FilterType.NetGroupTask || this.activeFilter == FilterType.NetGroupTaskYearmonth)
+				tryAddFilteredByGroupTask(filtered, item);
+		}
+
+		private void tryAddFilteredByGroup(List<TaskLogItem> filtered, TaskLogItem item)
+		{
+			if (item.groupName == comboGroup.Text)
+				filtered.Add(item);
+		}
+
+		private void tryAddFilteredByGroupTask(List<TaskLogItem> filtered, TaskLogItem item)
+		{
+			if (comboTask.SelectedIndex < 1)
+				filtered.Add(item);
+			else if (item.groupName == comboGroup.Text && item.description == comboTask.Text)
+				filtered.Add(item);
+		}
+
 		#endregion
 
 		#region aggregowanie danych
@@ -487,9 +629,9 @@ namespace TimeLogger
 
 		private void btnToCsv_Click(object sender, EventArgs e)
 		{
-			if (radioDailyAggregates.Checked)
+			if (comboAggregationType.Text == "daily")
 				new TaskLogManager().saveTaskLogs(LogType.AggregatedDaily, getAggregatedLogsPerGroup(this.detailedLogsGroupedByDay, comboDate.Text));
-			else if (radioMonthlyAggregates.Checked)
+			else if (comboAggregationType.Text == "monthly")
 				new TaskLogManager().saveTaskLogs(LogType.AggregatedMonthly, getAggregatedLogsPerGroup(this.detailedLogsGroupedByMonth, comboDate.Text));
 
 			MessageBox.Show("Saved");
@@ -497,9 +639,9 @@ namespace TimeLogger
 
 		private void btnToCsvAllDates_Click(object sender, EventArgs e)
 		{
-			if (radioDailyAggregates.Checked)
+			if (comboAggregationType.Text == "daily")
 				new TaskLogManager().saveTaskLogs(LogType.AggregatedDaily, getAggregatedLog(this.detailedLogsGroupedByDay));
-			else if (radioMonthlyAggregates.Checked)
+			else if (comboAggregationType.Text == "monthly")
 				new TaskLogManager().saveTaskLogs(LogType.AggregatedMonthly, getAggregatedLog(this.detailedLogsGroupedByMonth));
 
 			MessageBox.Show("Saved");

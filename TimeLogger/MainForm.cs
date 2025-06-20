@@ -9,13 +9,13 @@ namespace TimeLogger
     {
 		private List<TaskDefinitionItem> taskDefinitions;
 		private Dictionary<string, List<TaskLogItem>> taskLogs;
-		private TaskDefinitionsManager definitionsManager;
+		private TaskDefinitionsManager taskDefinitionsManager;
 		private TaskLogManager logManager = new TaskLogManager();
 
 		private int totalGroupboxHeigth = 0;
 		private Button currentButton;
 		private TaskLogItem currentTaskLogItem;
-		private System.Windows.Forms.Timer timer;
+		private Timer timer;
 
         public MainForm()
         {
@@ -37,8 +37,8 @@ namespace TimeLogger
 
 		private void initializeProperties()
 		{
-			this.definitionsManager = new TaskDefinitionsManager();
-			this.taskDefinitions = this.definitionsManager.taskDefinitions;
+			this.taskDefinitionsManager = new TaskDefinitionsManager();
+			this.taskDefinitions = this.taskDefinitionsManager.taskDefinitionsAll;
 			this.taskLogs = this.logManager.readTasks();
 		}
 
@@ -67,7 +67,7 @@ namespace TimeLogger
 
 			mainPanel.Width = w + 40;
 			mainPanel.Height = h + 80;
-			tbWorkDetails.Width = Settings.buttonWidth;
+			comboWorkDetails.Width = Settings.buttonWidth;
 			this.Size = new Size(mainPanel.Width + 10, mainPanel.Height + 50);
 		}
 		#endregion
@@ -179,7 +179,13 @@ namespace TimeLogger
 				return;
 			
 			logCurrentTask();
-			if (this.currentTaskLogItem.taskDurationInMinutes < 2)   //nie zapisuję tak krótkich zadań, prawdopodobnie to pomyłka
+			int minDuration;
+#if DEBUG
+			minDuration = 0;
+#else
+			minDuration = 2;
+#endif
+			if (this.currentTaskLogItem.taskDurationInMinutes < minDuration)   //nie zapisuję tak krótkich zadań, prawdopodobnie to pomyłka
 				removeTaskFromLog(this.currentTaskLogItem);
 			else
 				this.logManager.saveTaskLogs(LogType.Detailed, this.taskLogs);
@@ -195,15 +201,29 @@ namespace TimeLogger
 
 			this.currentTaskLogItem.setEndTime(DateTime.Now);
 			this.currentTaskLogItem.setTimeInMinutes();
-			this.currentTaskLogItem.setWorkDetails(tbWorkDetails.Text);
+			this.currentTaskLogItem.setWorkDetails(comboWorkDetails.Text);
+			if (this.currentTaskLogItem.taskDefinitionItem.addWorkDetails(comboWorkDetails.Text))
+				this.taskDefinitionsManager.modifyItem(this.currentTaskLogItem.taskDefinitionItem);
 		}
 
 		private void startNewTask(Button button)
 		{
 			TaskDefinitionItem taskDefinition = button.Tag as TaskDefinitionItem;
 			this.currentTaskLogItem = new TaskLogItem(taskDefinition);
-			tbWorkDetails.Clear();
+			fillComboWorkDetails();
 			startLogging(this.currentTaskLogItem);
+		}
+
+		private void fillComboWorkDetails()
+		{
+			comboWorkDetails.Items.Clear();
+			List<WorkDetailsItem> workDetails = this.taskDefinitionsManager.getWorkDetails(this.currentTaskLogItem.taskDefinitionItem);
+			for (int i = 0; i < workDetails.Count; i++)
+			{
+				comboWorkDetails.Items.Add(workDetails[i].description);
+			}
+			comboWorkDetails.SelectedIndex = -1;
+			comboWorkDetails.Text = "";
 		}
 
 		private void startLogging(TaskLogItem item)
@@ -222,19 +242,19 @@ namespace TimeLogger
 		{
 			this.taskLogs[logItem.date].Remove(logItem);
 		}
-		#endregion
+#endregion
 
 		#region przyciski menu
 		private void taskDictionaryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			TaskGroupManager gm = new TaskGroupManager();
-			if (gm.groupNames == null || gm.groupNames.Count == 0)
+			if (gm.activeGroupsNames == null || gm.activeGroupsNames.Count == 0)
 			{
 				MessageBox.Show("You need to define groups first");
 				return;
 			}
 			stopCurrentTask();
-			TaskDefinitionsForm tdf = new TaskDefinitionsForm(gm, this.definitionsManager);
+			TaskDefinitionsForm tdf = new TaskDefinitionsForm(gm, this.taskDefinitionsManager);
 			tdf.ShowDialog();
 			reloadControls();
 		}

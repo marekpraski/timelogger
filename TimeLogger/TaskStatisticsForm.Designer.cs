@@ -31,18 +31,8 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TaskStatisticsForm));
 			this.dgv = new System.Windows.Forms.DataGridView();
-			this.groupNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.startTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.endTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.workDetailsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.taskLogItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
 			this.comboDate = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.radioDailyAggregates = new System.Windows.Forms.RadioButton();
-			this.radioNet = new System.Windows.Forms.RadioButton();
-			this.radioMonthlyAggregates = new System.Windows.Forms.RadioButton();
 			this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
 			this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
 			this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
@@ -55,18 +45,30 @@
 			this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.buttonDelete = new System.Windows.Forms.ToolStripButton();
 			this.buttonSave = new System.Windows.Forms.ToolStripButton();
-			this.btnToCsv = new System.Windows.Forms.ToolStripButton();
 			this.btnToCsvAllDates = new System.Windows.Forms.ToolStripButton();
+			this.btnToCsv = new System.Windows.Forms.ToolStripButton();
+			this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+			this.comboAggregationType = new System.Windows.Forms.ToolStripComboBox();
+			this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+			this.toolStripLabelTimeLogged = new System.Windows.Forms.ToolStripLabel();
 			this.comboGroup = new System.Windows.Forms.ComboBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.comboYearMonth = new System.Windows.Forms.ComboBox();
 			this.label4 = new System.Windows.Forms.Label();
-			this.toolStripLabelTimeLogged = new System.Windows.Forms.ToolStripLabel();
+			this.label5 = new System.Windows.Forms.Label();
+			this.comboTask = new System.Windows.Forms.ComboBox();
+			this.taskLogItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+			this.groupNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.startTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.endTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.workDetailsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.taskLogItemBindingSource)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
 			this.bindingNavigator1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.taskLogItemBindingSource)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// dgv
@@ -95,113 +97,29 @@
 			this.dgv.TabIndex = 0;
 			this.dgv.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellDoubleClick);
 			// 
-			// groupNameDataGridViewTextBoxColumn
-			// 
-			this.groupNameDataGridViewTextBoxColumn.DataPropertyName = "groupName";
-			this.groupNameDataGridViewTextBoxColumn.HeaderText = "groupName";
-			this.groupNameDataGridViewTextBoxColumn.Name = "groupNameDataGridViewTextBoxColumn";
-			this.groupNameDataGridViewTextBoxColumn.ReadOnly = true;
-			this.groupNameDataGridViewTextBoxColumn.Width = 150;
-			// 
-			// descriptionDataGridViewTextBoxColumn
-			// 
-			this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "description";
-			this.descriptionDataGridViewTextBoxColumn.HeaderText = "description";
-			this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-			this.descriptionDataGridViewTextBoxColumn.ReadOnly = true;
-			this.descriptionDataGridViewTextBoxColumn.Width = 200;
-			// 
-			// startTimeDataGridViewTextBoxColumn
-			// 
-			this.startTimeDataGridViewTextBoxColumn.DataPropertyName = "startTime";
-			this.startTimeDataGridViewTextBoxColumn.HeaderText = "startTime";
-			this.startTimeDataGridViewTextBoxColumn.Name = "startTimeDataGridViewTextBoxColumn";
-			this.startTimeDataGridViewTextBoxColumn.ReadOnly = true;
-			// 
-			// endTimeDataGridViewTextBoxColumn
-			// 
-			this.endTimeDataGridViewTextBoxColumn.DataPropertyName = "endTime";
-			this.endTimeDataGridViewTextBoxColumn.HeaderText = "endTime";
-			this.endTimeDataGridViewTextBoxColumn.Name = "endTimeDataGridViewTextBoxColumn";
-			this.endTimeDataGridViewTextBoxColumn.ReadOnly = true;
-			// 
-			// taskDurationInHoursMinutesDataGridViewTextBoxColumn
-			// 
-			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.DataPropertyName = "taskDurationInHoursMinutes";
-			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.HeaderText = "duration";
-			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.Name = "taskDurationInHoursMinutesDataGridViewTextBoxColumn";
-			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.ReadOnly = true;
-			// 
-			// workDetailsDataGridViewTextBoxColumn
-			// 
-			this.workDetailsDataGridViewTextBoxColumn.DataPropertyName = "workDetails";
-			this.workDetailsDataGridViewTextBoxColumn.HeaderText = "workDetails (double click to edit)";
-			this.workDetailsDataGridViewTextBoxColumn.Name = "workDetailsDataGridViewTextBoxColumn";
-			this.workDetailsDataGridViewTextBoxColumn.ReadOnly = true;
-			this.workDetailsDataGridViewTextBoxColumn.Width = 250;
-			// 
-			// taskLogItemBindingSource
-			// 
-			this.taskLogItemBindingSource.DataSource = typeof(TimeLogger.TaskLogItem);
-			// 
 			// comboDate
 			// 
 			this.comboDate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboDate.FormattingEnabled = true;
-			this.comboDate.Location = new System.Drawing.Point(46, 30);
+			this.comboDate.Location = new System.Drawing.Point(46, 32);
 			this.comboDate.Name = "comboDate";
-			this.comboDate.Size = new System.Drawing.Size(100, 21);
+			this.comboDate.Size = new System.Drawing.Size(91, 21);
 			this.comboDate.TabIndex = 1;
 			this.comboDate.SelectedIndexChanged += new System.EventHandler(this.comboDate_SelectedIndexChanged);
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(12, 34);
+			this.label1.Location = new System.Drawing.Point(12, 36);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(28, 13);
 			this.label1.TabIndex = 2;
 			this.label1.Text = "date";
 			// 
-			// radioDailyAggregates
-			// 
-			this.radioDailyAggregates.AutoSize = true;
-			this.radioDailyAggregates.Checked = true;
-			this.radioDailyAggregates.Location = new System.Drawing.Point(152, 34);
-			this.radioDailyAggregates.Name = "radioDailyAggregates";
-			this.radioDailyAggregates.Size = new System.Drawing.Size(102, 17);
-			this.radioDailyAggregates.TabIndex = 3;
-			this.radioDailyAggregates.TabStop = true;
-			this.radioDailyAggregates.Text = "daily aggregates";
-			this.radioDailyAggregates.UseVisualStyleBackColor = true;
-			this.radioDailyAggregates.CheckedChanged += new System.EventHandler(this.radio_CheckedChanged);
-			// 
-			// radioNet
-			// 
-			this.radioNet.AutoSize = true;
-			this.radioNet.Location = new System.Drawing.Point(383, 33);
-			this.radioNet.Name = "radioNet";
-			this.radioNet.Size = new System.Drawing.Size(40, 17);
-			this.radioNet.TabIndex = 4;
-			this.radioNet.Text = "net";
-			this.radioNet.UseVisualStyleBackColor = true;
-			this.radioNet.CheckedChanged += new System.EventHandler(this.radio_CheckedChanged);
-			// 
-			// radioMonthlyAggregates
-			// 
-			this.radioMonthlyAggregates.AutoSize = true;
-			this.radioMonthlyAggregates.Location = new System.Drawing.Point(260, 34);
-			this.radioMonthlyAggregates.Name = "radioMonthlyAggregates";
-			this.radioMonthlyAggregates.Size = new System.Drawing.Size(117, 17);
-			this.radioMonthlyAggregates.TabIndex = 5;
-			this.radioMonthlyAggregates.TabStop = true;
-			this.radioMonthlyAggregates.Text = "monthly aggregates";
-			this.radioMonthlyAggregates.UseVisualStyleBackColor = true;
-			this.radioMonthlyAggregates.CheckedChanged += new System.EventHandler(this.radio_CheckedChanged);
-			// 
 			// bindingNavigator1
 			// 
 			this.bindingNavigator1.AddNewItem = null;
+			this.bindingNavigator1.BindingSource = this.taskLogItemBindingSource;
 			this.bindingNavigator1.CountItem = this.bindingNavigatorCountItem;
 			this.bindingNavigator1.DeleteItem = null;
 			this.bindingNavigator1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -217,8 +135,11 @@
             this.bindingNavigatorSeparator2,
             this.buttonDelete,
             this.buttonSave,
-            this.btnToCsv,
             this.btnToCsvAllDates,
+            this.btnToCsv,
+            this.toolStripLabel1,
+            this.comboAggregationType,
+            this.toolStripLabel2,
             this.toolStripLabelTimeLogged});
 			this.bindingNavigator1.Location = new System.Drawing.Point(0, 0);
 			this.bindingNavigator1.MoveFirstItem = this.bindingNavigatorMoveFirstItem;
@@ -319,16 +240,6 @@
 			this.buttonSave.Text = "Save changes";
 			this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
 			// 
-			// btnToCsv
-			// 
-			this.btnToCsv.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.btnToCsv.Image = global::TimeLogger.Properties.Resources.ResultToCSV_16x;
-			this.btnToCsv.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.btnToCsv.Name = "btnToCsv";
-			this.btnToCsv.Size = new System.Drawing.Size(24, 24);
-			this.btnToCsv.Text = "Export to csv selected date";
-			this.btnToCsv.Click += new System.EventHandler(this.btnToCsv_Click);
-			// 
 			// btnToCsvAllDates
 			// 
 			this.btnToCsvAllDates.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -339,20 +250,55 @@
 			this.btnToCsvAllDates.Text = "Export to csv all dates";
 			this.btnToCsvAllDates.Click += new System.EventHandler(this.btnToCsvAllDates_Click);
 			// 
+			// btnToCsv
+			// 
+			this.btnToCsv.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnToCsv.Image = global::TimeLogger.Properties.Resources.ResultToCSV_16x;
+			this.btnToCsv.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnToCsv.Name = "btnToCsv";
+			this.btnToCsv.Size = new System.Drawing.Size(24, 24);
+			this.btnToCsv.Text = "Export to csv selected date";
+			this.btnToCsv.Click += new System.EventHandler(this.btnToCsv_Click);
+			// 
+			// toolStripLabel1
+			// 
+			this.toolStripLabel1.Name = "toolStripLabel1";
+			this.toolStripLabel1.Size = new System.Drawing.Size(19, 24);
+			this.toolStripLabel1.Text = "    ";
+			// 
+			// comboAggregationType
+			// 
+			this.comboAggregationType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboAggregationType.Name = "comboAggregationType";
+			this.comboAggregationType.Size = new System.Drawing.Size(140, 27);
+			this.comboAggregationType.SelectedIndexChanged += new System.EventHandler(this.comboAggregationType_SelectedIndexChanged);
+			// 
+			// toolStripLabel2
+			// 
+			this.toolStripLabel2.Name = "toolStripLabel2";
+			this.toolStripLabel2.Size = new System.Drawing.Size(19, 24);
+			this.toolStripLabel2.Text = "    ";
+			// 
+			// toolStripLabelTimeLogged
+			// 
+			this.toolStripLabelTimeLogged.Name = "toolStripLabelTimeLogged";
+			this.toolStripLabelTimeLogged.Size = new System.Drawing.Size(71, 24);
+			this.toolStripLabelTimeLogged.Text = "time logged";
+			// 
 			// comboGroup
 			// 
 			this.comboGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboGroup.FormattingEnabled = true;
-			this.comboGroup.Location = new System.Drawing.Point(576, 31);
+			this.comboGroup.Location = new System.Drawing.Point(268, 31);
 			this.comboGroup.Name = "comboGroup";
-			this.comboGroup.Size = new System.Drawing.Size(150, 21);
+			this.comboGroup.Size = new System.Drawing.Size(188, 21);
 			this.comboGroup.TabIndex = 7;
 			this.comboGroup.SelectedIndexChanged += new System.EventHandler(this.comboGroup_SelectedIndexChanged);
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(536, 34);
+			this.label2.Location = new System.Drawing.Point(230, 36);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(34, 13);
 			this.label2.TabIndex = 8;
@@ -361,7 +307,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(732, 34);
+			this.label3.Location = new System.Drawing.Point(778, 36);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(59, 13);
 			this.label3.TabIndex = 10;
@@ -371,41 +317,111 @@
 			// 
 			this.comboYearMonth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboYearMonth.FormattingEnabled = true;
-			this.comboYearMonth.Location = new System.Drawing.Point(797, 31);
+			this.comboYearMonth.Location = new System.Drawing.Point(840, 31);
 			this.comboYearMonth.Name = "comboYearMonth";
-			this.comboYearMonth.Size = new System.Drawing.Size(80, 21);
+			this.comboYearMonth.Size = new System.Drawing.Size(76, 21);
 			this.comboYearMonth.TabIndex = 9;
 			this.comboYearMonth.SelectedIndexChanged += new System.EventHandler(this.comboYearMonth_SelectedIndexChanged);
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(484, 34);
+			this.label4.Location = new System.Drawing.Point(182, 36);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(46, 13);
 			this.label4.TabIndex = 11;
 			this.label4.Text = "Filter by:";
 			// 
-			// toolStripLabelTimeLogged
+			// label5
 			// 
-			this.toolStripLabelTimeLogged.Name = "toolStripLabelTimeLogged";
-			this.toolStripLabelTimeLogged.Size = new System.Drawing.Size(71, 24);
-			this.toolStripLabelTimeLogged.Text = "time logged";
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(461, 36);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(27, 13);
+			this.label5.TabIndex = 13;
+			this.label5.Text = "task";
+			// 
+			// comboTask
+			// 
+			this.comboTask.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboTask.FormattingEnabled = true;
+			this.comboTask.Location = new System.Drawing.Point(491, 31);
+			this.comboTask.Name = "comboTask";
+			this.comboTask.Size = new System.Drawing.Size(264, 21);
+			this.comboTask.TabIndex = 12;
+			this.comboTask.SelectedIndexChanged += new System.EventHandler(this.comboTask_SelectedIndexChanged);
+			// 
+			// taskLogItemBindingSource
+			// 
+			this.taskLogItemBindingSource.DataSource = typeof(TimeLogger.TaskLogItem);
+			// 
+			// groupNameDataGridViewTextBoxColumn
+			// 
+			this.groupNameDataGridViewTextBoxColumn.DataPropertyName = "groupName";
+			this.groupNameDataGridViewTextBoxColumn.HeaderText = "groupName";
+			this.groupNameDataGridViewTextBoxColumn.MinimumWidth = 6;
+			this.groupNameDataGridViewTextBoxColumn.Name = "groupNameDataGridViewTextBoxColumn";
+			this.groupNameDataGridViewTextBoxColumn.ReadOnly = true;
+			this.groupNameDataGridViewTextBoxColumn.Width = 150;
+			// 
+			// descriptionDataGridViewTextBoxColumn
+			// 
+			this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "description";
+			this.descriptionDataGridViewTextBoxColumn.HeaderText = "description";
+			this.descriptionDataGridViewTextBoxColumn.MinimumWidth = 6;
+			this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
+			this.descriptionDataGridViewTextBoxColumn.ReadOnly = true;
+			this.descriptionDataGridViewTextBoxColumn.Width = 200;
+			// 
+			// startTimeDataGridViewTextBoxColumn
+			// 
+			this.startTimeDataGridViewTextBoxColumn.DataPropertyName = "startTime";
+			this.startTimeDataGridViewTextBoxColumn.HeaderText = "startTime";
+			this.startTimeDataGridViewTextBoxColumn.MinimumWidth = 6;
+			this.startTimeDataGridViewTextBoxColumn.Name = "startTimeDataGridViewTextBoxColumn";
+			this.startTimeDataGridViewTextBoxColumn.ReadOnly = true;
+			this.startTimeDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// endTimeDataGridViewTextBoxColumn
+			// 
+			this.endTimeDataGridViewTextBoxColumn.DataPropertyName = "endTime";
+			this.endTimeDataGridViewTextBoxColumn.HeaderText = "endTime";
+			this.endTimeDataGridViewTextBoxColumn.MinimumWidth = 6;
+			this.endTimeDataGridViewTextBoxColumn.Name = "endTimeDataGridViewTextBoxColumn";
+			this.endTimeDataGridViewTextBoxColumn.ReadOnly = true;
+			this.endTimeDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// taskDurationInHoursMinutesDataGridViewTextBoxColumn
+			// 
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.DataPropertyName = "taskDurationInHoursMinutes";
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.HeaderText = "duration";
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.MinimumWidth = 6;
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.Name = "taskDurationInHoursMinutesDataGridViewTextBoxColumn";
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.ReadOnly = true;
+			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// workDetailsDataGridViewTextBoxColumn
+			// 
+			this.workDetailsDataGridViewTextBoxColumn.DataPropertyName = "workDetails";
+			this.workDetailsDataGridViewTextBoxColumn.HeaderText = "workDetails (double click to edit)";
+			this.workDetailsDataGridViewTextBoxColumn.MinimumWidth = 6;
+			this.workDetailsDataGridViewTextBoxColumn.Name = "workDetailsDataGridViewTextBoxColumn";
+			this.workDetailsDataGridViewTextBoxColumn.ReadOnly = true;
+			this.workDetailsDataGridViewTextBoxColumn.Width = 250;
 			// 
 			// TaskStatisticsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(939, 483);
+			this.Controls.Add(this.label5);
+			this.Controls.Add(this.comboTask);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.comboYearMonth);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.comboGroup);
 			this.Controls.Add(this.bindingNavigator1);
-			this.Controls.Add(this.radioMonthlyAggregates);
-			this.Controls.Add(this.radioNet);
-			this.Controls.Add(this.radioDailyAggregates);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.comboDate);
 			this.Controls.Add(this.dgv);
@@ -413,10 +429,10 @@
 			this.Text = "Task Statistics";
 			this.Load += new System.EventHandler(this.TaskStatisticsForm_Load);
 			((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.taskLogItemBindingSource)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
 			this.bindingNavigator1.ResumeLayout(false);
 			this.bindingNavigator1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.taskLogItemBindingSource)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -427,9 +443,6 @@
 		private System.Windows.Forms.DataGridView dgv;
 		private System.Windows.Forms.ComboBox comboDate;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.RadioButton radioDailyAggregates;
-		private System.Windows.Forms.RadioButton radioNet;
-		private System.Windows.Forms.RadioButton radioMonthlyAggregates;
 		private System.Windows.Forms.BindingNavigator bindingNavigator1;
 		private System.Windows.Forms.ToolStripLabel bindingNavigatorCountItem;
 		private System.Windows.Forms.ToolStripButton bindingNavigatorMoveFirstItem;
@@ -457,5 +470,10 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn workDetailsDataGridViewTextBoxColumn;
 		private System.Windows.Forms.ToolStripButton btnToCsvAllDates;
 		private System.Windows.Forms.ToolStripLabel toolStripLabelTimeLogged;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.ComboBox comboTask;
+		private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+		private System.Windows.Forms.ToolStripComboBox comboAggregationType;
+		private System.Windows.Forms.ToolStripLabel toolStripLabel2;
 	}
 }

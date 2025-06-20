@@ -48,11 +48,11 @@ namespace TimeLogger
 			switch (columnIndex)
 			{
 				case 0:
-					 edited.groupName = tbDetails.Text;
+					 edited.taskDefinitionItem.groupName = tbDetails.Text;
 					this.DialogResult = DialogResult.OK;
 					return;
 				case 1:
-					 edited.description = tbDetails.Text;
+					 edited.taskDefinitionItem.description = tbDetails.Text;
 					this.DialogResult = DialogResult.OK;
 					return;
 				case 2:
@@ -64,7 +64,7 @@ namespace TimeLogger
 					this.DialogResult = DialogResult.OK;
 					return;
 				case 5:
-					 edited.workDetails = tbDetails.Text;
+					 edited.workDetailsObject.description = tbDetails.Text;
 					this.DialogResult = DialogResult.OK;
 					return;
 			}

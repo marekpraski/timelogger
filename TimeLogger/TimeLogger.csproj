@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ButtonGroup.cs" />
+    <Compile Include="Group.cs" />
     <Compile Include="LogType.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="MainForm.cs">
@@ -74,6 +75,7 @@
     </Compile>
     <Compile Include="TaskDefinitionItem.cs" />
     <Compile Include="TaskDefinitionsManager.cs" />
+    <Compile Include="WorkDetailsItem.cs" />
     <Compile Include="TaskGroupManager.cs" />
     <Compile Include="TaskLogItem.cs" />
     <Compile Include="TaskLogManager.cs" />

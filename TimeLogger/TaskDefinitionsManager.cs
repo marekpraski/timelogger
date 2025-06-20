@@ -2,41 +2,84 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml.Linq;
 
 namespace TimeLogger
 {
     public class TaskDefinitionsManager
     {
 		private string dictFileName = "timeLoggerDefinitions.txt";
-		public List<TaskDefinitionItem> taskDefinitions { get; }
+		/// <summary>
+		/// zawiera definicje wszystkich zadań z wszystkich grup
+		/// </summary>
+		public List<TaskDefinitionItem> taskDefinitionsAll { get; }
+		/// <summary>
+		/// zawiera definicje wszystkich zadań wszystkich aktywnych grup
+		/// </summary>
+		public List<TaskDefinitionItem> taskDefinitionsActiveGroups { get; }
+		private TaskGroupManager groupManager = new TaskGroupManager();
 
 		public TaskDefinitionsManager()
 		{
-			taskDefinitions = new List<TaskDefinitionItem>();
+			taskDefinitionsAll = new List<TaskDefinitionItem>();
+			taskDefinitionsActiveGroups = new List<TaskDefinitionItem>();
 			readTaskDictionary();
 		}
 
 		internal void addItem(TaskDefinitionItem item)
 		{
-			taskDefinitions.Add(item);
+			taskDefinitionsAll.Add(item);
+			saveDictionary();
+		}
+
+		/// <summary>
+		/// zamienia istniejący obiekt TaskDefinitionItem na liście definicji na przekazany w parametrze;
+		/// ideą jest, że przekazany obiekt ma inne wpisy WorkDetails niż istniejący
+		/// </summary>
+		internal void modifyItem(TaskDefinitionItem item)
+		{
+			for (int i = 0; i < taskDefinitionsAll.Count; i++)
+			{
+				if (taskDefinitionsAll[i].Equals(item))
+					taskDefinitionsAll[i] = item;
+			}
 			saveDictionary();
 		}
 
 		internal void removeItem(TaskDefinitionItem item)
 		{
-			taskDefinitions.Remove(item);
+			taskDefinitionsAll.Remove(item);
 			saveDictionary();
 		}
 
 		internal void saveDictionary()
 		{
 			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < taskDefinitions.Count; i++)
+			for (int i = 0; i < taskDefinitionsAll.Count; i++)
 			{
-				sb.AppendLine(taskDefinitions[i].toString());
+				sb.AppendLine(taskDefinitionsAll[i].toString());
 			}
 			File.WriteAllText(dictFileName, sb.ToString());
+		}
+
+		internal List<WorkDetailsItem> getWorkDetails(TaskDefinitionItem taskLogItem)
+		{
+			for (int i = 0; i < taskDefinitionsAll.Count; i++)
+			{
+				if (taskDefinitionsAll[i].Equals(taskLogItem))
+					return taskDefinitionsAll[i].workDetails;
+			}
+			return null;
+		}
+
+		internal List<TaskDefinitionItem> getGroupTasks(string groupName)
+		{
+			List<TaskDefinitionItem> l = new List<TaskDefinitionItem>();
+			for (int i = 0; i < this.taskDefinitionsActiveGroups.Count; i++)
+			{
+				if (this.taskDefinitionsActiveGroups[i].groupName == groupName)
+					l.Add(this.taskDefinitionsActiveGroups[i]);
+			}
+			return l;
 		}
 
 		private void readTaskDictionary()
@@ -47,9 +90,13 @@ namespace TimeLogger
 
 			for (int i = 0; i < dict.Length; i++)
 			{
-				taskDefinitions.Add(new TaskDefinitionItem(dict[i]));
+				TaskDefinitionItem item = new TaskDefinitionItem(dict[i]);
+				taskDefinitionsAll.Add(item);
+				if (groupManager.isTaskGroupActive(item))
+					taskDefinitionsActiveGroups.Add(item);
 			}
-			taskDefinitions.Sort((x, y) => x.sortCriterion.CompareTo(y.sortCriterion));
+			taskDefinitionsAll.Sort((x, y) => x.sortCriterion.CompareTo(y.sortCriterion));
 		}
+
 	}
 }
