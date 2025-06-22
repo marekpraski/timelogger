@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("TimeKeeper")]
-[assembly: AssemblyDescription("2025-05-20")]
+[assembly: AssemblyDescription("2025-06-22")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TimeKeeper")]
@@ -28,5 +28,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.2.4.0")]
+[assembly: AssemblyVersion("1.3.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

@@ -48,35 +48,35 @@
             this.taskStatsToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(401, 28);
+			this.menuStrip1.Size = new System.Drawing.Size(401, 30);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
 			// groupsToolStripMenuItem
 			// 
 			this.groupsToolStripMenuItem.Name = "groupsToolStripMenuItem";
-			this.groupsToolStripMenuItem.Size = new System.Drawing.Size(70, 24);
+			this.groupsToolStripMenuItem.Size = new System.Drawing.Size(70, 26);
 			this.groupsToolStripMenuItem.Text = "Groups";
 			this.groupsToolStripMenuItem.Click += new System.EventHandler(this.groupsToolStripMenuItem_Click);
 			// 
 			// allTasksToolStripMenuItem
 			// 
 			this.allTasksToolStripMenuItem.Name = "allTasksToolStripMenuItem";
-			this.allTasksToolStripMenuItem.Size = new System.Drawing.Size(95, 24);
+			this.allTasksToolStripMenuItem.Size = new System.Drawing.Size(95, 26);
 			this.allTasksToolStripMenuItem.Text = "Definitions";
 			this.allTasksToolStripMenuItem.Click += new System.EventHandler(this.taskDictionaryToolStripMenuItem_Click);
 			// 
 			// taskStatsToolStripMenuItem
 			// 
 			this.taskStatsToolStripMenuItem.Name = "taskStatsToolStripMenuItem";
-			this.taskStatsToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
+			this.taskStatsToolStripMenuItem.Size = new System.Drawing.Size(81, 26);
 			this.taskStatsToolStripMenuItem.Text = "Statistics";
 			this.taskStatsToolStripMenuItem.Click += new System.EventHandler(this.taskStatsToolStripMenuItem_Click);
 			// 
 			// mainPanel
 			// 
 			this.mainPanel.Location = new System.Drawing.Point(16, 87);
-			this.mainPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.mainPanel.Margin = new System.Windows.Forms.Padding(4);
 			this.mainPanel.Name = "mainPanel";
 			this.mainPanel.Size = new System.Drawing.Size(365, 133);
 			this.mainPanel.TabIndex = 1;
@@ -93,9 +93,11 @@
 			// 
 			// comboWorkDetails
 			// 
+			this.comboWorkDetails.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+			this.comboWorkDetails.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
 			this.comboWorkDetails.FormattingEnabled = true;
 			this.comboWorkDetails.Location = new System.Drawing.Point(16, 54);
-			this.comboWorkDetails.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.comboWorkDetails.Margin = new System.Windows.Forms.Padding(4);
 			this.comboWorkDetails.Name = "comboWorkDetails";
 			this.comboWorkDetails.Size = new System.Drawing.Size(364, 24);
 			this.comboWorkDetails.Sorted = true;
@@ -111,7 +113,7 @@
 			this.Controls.Add(this.mainPanel);
 			this.Controls.Add(this.menuStrip1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "MainForm";
 			this.Text = "Time Logger";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);

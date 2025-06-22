@@ -127,10 +127,12 @@ namespace TimeLogger
 		/// <summary>
 		/// czyści opis zadania oraz timeInMinutes, bo gdy klonuję kopiują się też te właściwości i
 		/// podczas agregacji uzyskuję powtórzenie czasu i opisu zadania dla pierwszego wpisu;
+		/// szczegóły uusuwa tylko gdy przekazany parametr jest true
 		/// </summary>
-		internal void clearTimeInMinutesAndWorkDetails()
+		internal void clearTimeInMinutesAndWorkDetails(bool clearWorkDetails)
 		{
-			this.workDetailsObject.description = "";
+			if (clearWorkDetails)
+				this.workDetailsObject.description = "";
 			this.timeInMinutes = 0;
 		}
 
@@ -144,10 +146,10 @@ namespace TimeLogger
 			return new TaskLogItem(this.toStringDetailed());
 		}
 
-		internal void aggregate(TaskLogItem other)
+		internal void aggregate(TaskLogItem other, bool aggregateWorkDetails)
 		{
 			this.timeInMinutes += other.timeInMinutes;
-			if (!String.IsNullOrEmpty(other.workDetails))
+			if (aggregateWorkDetails && !String.IsNullOrEmpty(other.workDetails))
 				this.workDetailsObject.description += addLineBreak() + other.workDetails;
 		}
 
