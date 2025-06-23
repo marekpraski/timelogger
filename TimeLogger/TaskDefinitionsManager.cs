@@ -28,6 +28,8 @@ namespace TimeLogger
 		internal void addItem(TaskDefinitionItem item)
 		{
 			taskDefinitionsAll.Add(item);
+			if (groupManager.isTaskGroupActive(item))
+				taskDefinitionsActiveGroups.Add(item);
 			saveDictionary();
 		}
 
@@ -48,6 +50,8 @@ namespace TimeLogger
 		internal void removeItem(TaskDefinitionItem item)
 		{
 			taskDefinitionsAll.Remove(item);
+			if (groupManager.isTaskGroupActive(item))
+				taskDefinitionsActiveGroups.Remove(item);
 			saveDictionary();
 		}
 
@@ -96,6 +100,7 @@ namespace TimeLogger
 					taskDefinitionsActiveGroups.Add(item);
 			}
 			taskDefinitionsAll.Sort((x, y) => x.sortCriterion.CompareTo(y.sortCriterion));
+			taskDefinitionsActiveGroups.Sort((x, y) => x.sortCriterion.CompareTo(y.sortCriterion));
 		}
 
 	}

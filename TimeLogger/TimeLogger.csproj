@@ -137,6 +137,7 @@
   <ItemGroup>
     <None Include="Resources\ResultToCSV_16x.png" />
     <None Include="Resources\ResultToCSVAggregate_16x.png" />
+    <None Include="Resources\delete.png" />
     <Content Include="time_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

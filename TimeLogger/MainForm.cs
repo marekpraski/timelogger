@@ -67,7 +67,7 @@ namespace TimeLogger
 
 			mainPanel.Width = w + 40;
 			mainPanel.Height = h + 80;
-			comboWorkDetails.Width = Settings.buttonWidth;
+			//comboWorkDetails.Width = Settings.buttonWidth;
 			this.Size = new Size(mainPanel.Width + 10, mainPanel.Height + 50);
 		}
 		#endregion
@@ -79,8 +79,8 @@ namespace TimeLogger
 			int groupboxVerticalLocation = previousGroupboxHeigth + Settings.firstGroupboxVerticalLocation + Settings.verticalGroupboxPadding;
 			groupBox.Location = new System.Drawing.Point(Settings.horizontalGroupboxPadding, groupboxVerticalLocation);
 
-			int groupboxHeight = numberOfButtons * (Settings.buttonHeigth + Settings.verticalButtonPadding) + Settings.firstButtonVerticalOffset;
-			groupBox.Size = new System.Drawing.Size(Settings.buttonWidth + 2*Settings.horizontalButtonPadding, groupboxHeight);
+			int groupboxHeight = numberOfButtons * (Settings.buttonHeigth + Settings.verticalButtonPadding) + Settings.firstButtonVerticalOffset + Settings.lastButtonVerticalOffset;
+			groupBox.Size = new System.Drawing.Size(Settings.buttonWidth + 2 * Settings.horizontalButtonPadding, groupboxHeight);
 			this.totalGroupboxHeigth += groupboxHeight;
 			return groupBox;
 		}
@@ -145,7 +145,7 @@ namespace TimeLogger
 			for (int i = 0; i < buttons.Length; i++)
 			{
 				int buttonHorizontalLocation = Settings.horizontalButtonPadding;
-				int buttonVerticalLocation = i * Settings.buttonHeigth + Settings.firstButtonVerticalOffset + Settings.verticalButtonPadding;
+				int buttonVerticalLocation = i * (Settings.buttonHeigth + Settings.verticalButtonPadding) + Settings.firstButtonVerticalOffset;
 
 				buttons[i].Location = new Point(buttonHorizontalLocation, buttonVerticalLocation);
 				gb.Controls.Add(buttons[i]);
@@ -214,18 +214,6 @@ namespace TimeLogger
 			startLogging(this.currentTaskLogItem);
 		}
 
-		private void fillComboWorkDetails()
-		{
-			comboWorkDetails.Items.Clear();
-			List<WorkDetailsItem> workDetails = this.taskDefinitionsManager.getWorkDetails(this.currentTaskLogItem.taskDefinitionItem);
-			for (int i = 0; i < workDetails.Count; i++)
-			{
-				comboWorkDetails.Items.Add(workDetails[i].description);
-			}
-			comboWorkDetails.SelectedIndex = -1;
-			comboWorkDetails.Text = "";
-		}
-
 		private void startLogging(TaskLogItem item)
 		{
 			if (this.taskLogs.ContainsKey(item.date))
@@ -242,7 +230,21 @@ namespace TimeLogger
 		{
 			this.taskLogs[logItem.date].Remove(logItem);
 		}
-#endregion
+		#endregion
+
+		#region wypełnianie kombo szczegółów zadania
+		private void fillComboWorkDetails()
+		{
+			comboWorkDetails.Items.Clear();
+			List<WorkDetailsItem> workDetails = this.taskDefinitionsManager.getWorkDetails(this.currentTaskLogItem.taskDefinitionItem);
+			for (int i = 0; i < workDetails.Count; i++)
+			{
+				comboWorkDetails.Items.Add(workDetails[i].description);
+			}
+			comboWorkDetails.SelectedIndex = -1;
+			comboWorkDetails.Text = "";
+		} 
+		#endregion
 
 		#region przyciski menu
 		private void taskDictionaryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -278,7 +280,20 @@ namespace TimeLogger
 			GroupsForm df = new GroupsForm();
 			df.ShowDialog();
 			reloadControls();
-		} 
+		}
+		#endregion
+
+		#region przycisk usuwania szczegółów zadania
+		private void btnDeleteWorkDetails_Click(object sender, EventArgs e)
+		{
+			if (comboWorkDetails.Items.Count == 0)
+				return;
+			if (this.currentTaskLogItem.taskDefinitionItem.removeWorkDetails(comboWorkDetails.Text))
+			{
+				this.taskDefinitionsManager.modifyItem(this.currentTaskLogItem.taskDefinitionItem);
+				comboWorkDetails.Items.RemoveAt(comboWorkDetails.SelectedIndex);
+			}
+		}
 		#endregion
 
 		#region pomocnicze
@@ -320,7 +335,8 @@ namespace TimeLogger
 		{
 			logCurrentTask();
 			this.logManager.saveTaskLogs(LogType.Detailed, this.taskLogs);
-		} 
+		}
 		#endregion
+
 	}
 }

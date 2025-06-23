@@ -79,5 +79,23 @@ namespace TimeLogger
 			workDetails.Add(item);
 			return true;
 		}
+
+		/// <summary>
+		/// usuwa wpis szczegółów z listy istniejących
+		/// </summary>
+		internal bool removeWorkDetails(string text)
+		{
+			if (String.IsNullOrEmpty(text))
+				return false;
+			for (int i = 0; i < workDetails.Count; i++)
+			{
+				if (workDetails[i].description.ToLower().Trim() == text.ToLower().Trim())
+				{
+					workDetails.Remove(workDetails[i]);
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }
