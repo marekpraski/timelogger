@@ -10,10 +10,12 @@ namespace TimeLogger
 		private List<TaskDefinitionItem> taskDefinitions;
 		private Dictionary<string, List<TaskLogItem>> taskLogs;
 		private TaskDefinitionsManager taskDefinitionsManager;
+		Dictionary<string, List<Button>> taskButtonDict;
 		private TaskLogManager logManager = new TaskLogManager();
+		private Button[] groupButtons;
 
-		private int totalGroupboxHeigth = 0;
-		private Button currentButton;
+		private Button currentGroupButton;
+		private Button currentTaskButton;
 		private TaskLogItem currentTaskLogItem;
 		private Timer timer;
 
@@ -25,6 +27,7 @@ namespace TimeLogger
 		private void MainForm_Load(object sender, EventArgs e)
 		{
 			initializeProperties();
+			this.groupButtons = generateGroupButtons();
 			generateFormLayout();
 		}
 
@@ -37,82 +40,127 @@ namespace TimeLogger
 
 		private void initializeProperties()
 		{
+			this.currentGroupButton = null;
+			this.currentTaskButton = null;
 			this.taskDefinitionsManager = new TaskDefinitionsManager();
 			this.taskDefinitions = this.taskDefinitionsManager.taskDefinitionsAll;
 			this.taskLogs = this.logManager.readTasks();
+			this.taskButtonDict = generateTaskButtons();
 		}
 
 		#region obliczanie wielkości groupboxów i formatki
 		private void generateFormLayout()
 		{
-			ButtonGroup[] buttonGroups = generateButtons();
-			int previousGroupboxHeigth = 0;
-			for (int i = 0; i < buttonGroups.Length; i++)
+			populateGroupPanel();
+			Button[] taskButtons = populateTaskPanel();
+			setFormLayout(groupButtons, taskButtons);
+		}
+
+		private void populateGroupPanel()
+		{
+			addButtonsToPanel(groupPanel, groupButtons);
+			groupPanel.Width = 10 + Settings.groupButtonWidth;
+		}
+
+		private Button[] populateTaskPanel()
+		{
+			Button[] taskButtons = getTaskButtons();
+			addButtonsToPanel(taskPanel, taskButtons);
+			taskPanel.Width = 10 + Settings.taskButtonWidth;
+			taskPanel.Location = new Point(groupPanel.Width + Settings.horizontalPadding, taskPanel.Location.Y);
+			return taskButtons;
+		}
+
+		private Button[] getTaskButtons()
+		{
+			if (this.currentGroupButton == null)
+				return null;
+			if (this.taskButtonDict.ContainsKey(this.currentGroupButton.Tag.ToString()))
+				return this.taskButtonDict[this.currentGroupButton.Tag.ToString()].ToArray();
+			return null;
+		}
+
+		private void setFormLayout(Button[] groupButtons, Button[] taskButtons)
+		{
+			groupPanel.Height = calculatePanelHeight(groupButtons);
+			taskPanel.Height = calculatePanelHeight(taskButtons);
+			int ht = groupPanel.Height > taskPanel.Height ? groupPanel.Height : taskPanel.Height;
+			int wt = groupPanel.Width + taskPanel.Width + 2 * Settings.horizontalPadding + 10;
+			comboWorkDetails.Width = groupPanel.Width + taskPanel.Width - btnDeleteWorkDetails.Width;
+			btnDeleteWorkDetails.Location = new Point(comboWorkDetails.Width + Settings.horizontalPadding, btnDeleteWorkDetails.Location.Y);
+			if (ht < Settings.minMainFormHeigth)
+				ht = Settings.minMainFormHeigth;
+			this.Size = new Size(wt, ht + 120);
+		}
+
+		private int calculatePanelHeight(Button[] groupButtons)
+		{
+			if (groupButtons == null)
+				return 100;
+			return groupButtons.Length * (Settings.buttonHeigth + Settings.verticalButtonPadding) + 25;
+		}
+		#endregion
+
+		#region tworzenie przycisków grup
+		private Button[] generateGroupButtons()
+		{
+			TaskGroupManager gm = new TaskGroupManager();
+			if (gm.activeGroupsNames.Count == 0)
+				return null;
+			Button[] grB = new Button[gm.activeGroupsNames.Count];
+			for (int i = 0; i < gm.activeGroupsNames.Count; i++)
 			{
-				GroupBox gbs = generateOneGroupbox(buttonGroups[i].buttons.Length, previousGroupboxHeigth);
-				previousGroupboxHeigth += gbs.Height;
-				gbs.Text = buttonGroups[i].groupName;
-				addButtonsToGroupbox(gbs, buttonGroups[i].buttons);
-				mainPanel.Controls.Add(gbs);
+				grB[i] = generateOneGroupButton(gm.activeGroupsNames[i], i);
 			}
-			setFormSize();
+			return grB;
 		}
 
-		private void setFormSize()
+		private Button generateOneGroupButton(string groupName, int index)
 		{
-			int w = 2 * Settings.horizontalGroupboxPadding + Settings.buttonWidth;
-			int h = Settings.firstGroupboxVerticalLocation + this.totalGroupboxHeigth;
-			if (h < Settings.minPanelHeigth)
-				h = Settings.minPanelHeigth;
-
-			mainPanel.Width = w + 40;
-			mainPanel.Height = h + 80;
-			//comboWorkDetails.Width = Settings.buttonWidth;
-			this.Size = new Size(mainPanel.Width + 10, mainPanel.Height + 50);
+			Button button = new Button();
+			button.Click += new EventHandler(groupButtonClick);
+			button.Name = "group" + index.ToString();
+			button.Text = groupName;
+			button.Tag = groupName;
+			button.Size = new Size(Settings.groupButtonWidth, Settings.buttonHeigth);
+			button.BackColor = SystemColors.ButtonHighlight;
+			return button;
 		}
-		#endregion
 
-		#region tworzenie groupboxów
-		private GroupBox generateOneGroupbox(int numberOfButtons, int previousGroupboxHeigth)
+		private void addButtonsToPanel(GroupBox panel, Button[] buttons)
 		{
-			GroupBox groupBox = new GroupBox();
-			int groupboxVerticalLocation = previousGroupboxHeigth + Settings.firstGroupboxVerticalLocation + Settings.verticalGroupboxPadding;
-			groupBox.Location = new System.Drawing.Point(Settings.horizontalGroupboxPadding, groupboxVerticalLocation);
-
-			int groupboxHeight = numberOfButtons * (Settings.buttonHeigth + Settings.verticalButtonPadding) + Settings.firstButtonVerticalOffset + Settings.lastButtonVerticalOffset;
-			groupBox.Size = new System.Drawing.Size(Settings.buttonWidth + 2 * Settings.horizontalButtonPadding, groupboxHeight);
-			this.totalGroupboxHeigth += groupboxHeight;
-			return groupBox;
+			panel.Controls.Clear();
+			if (buttons == null)
+				return;
+			for (int i = 0; i < buttons.Length; i++)
+			{
+				buttons[i].Location = new Point(3, 20 + i * (Settings.buttonHeigth + Settings.verticalButtonPadding));
+				panel.Controls.Add(buttons[i]);
+			}
 		}
 		#endregion
 
-		#region tworzenie przycisków
-		private ButtonGroup[] generateButtons()
+		#region tworzenie przycisków zadań
+
+		private Dictionary<string, List<Button>> generateTaskButtons()
 		{
-			Dictionary<string, List<Button>> btnGroups = new Dictionary<string, List<Button>>();
+			Dictionary<string, List<Button>> taskBtnDict = new Dictionary<string, List<Button>>();
 			List<TaskDefinitionItem> tasks = getActiveTasks();
 			Button b;
 			
 			for (int i = 0; i < tasks.Count; i++)
 			{
-				b = generateOneButton(tasks[i], i);
-				if (btnGroups.ContainsKey(tasks[i].groupName))
-					btnGroups[tasks[i].groupName].Add(b);
+				b = generateOneTaskButton(tasks[i], i);
+				if (taskBtnDict.ContainsKey(tasks[i].groupName))
+					taskBtnDict[tasks[i].groupName].Add(b);
 				else
 				{
 					List<Button> bts = new List<Button>();
 					bts.Add(b);
-					btnGroups.Add(tasks[i].groupName, bts);
+					taskBtnDict.Add(tasks[i].groupName, bts);
 				}
 			}
-			ButtonGroup[] bgs = new ButtonGroup[btnGroups.Keys.Count];
-			int k = 0;
-			foreach(string key in btnGroups.Keys)
-			{
-				bgs[k] = new ButtonGroup() { buttons = btnGroups[key].ToArray(), groupName = key };
-				k++;
-			}
-			return bgs;
+			return taskBtnDict;
 		}
 
 		private List<TaskDefinitionItem> getActiveTasks()
@@ -126,49 +174,71 @@ namespace TimeLogger
 			return tasks;
 		}
 
-		private Button generateOneButton(TaskDefinitionItem task, int index)
+		private Button generateOneTaskButton(TaskDefinitionItem task, int index)
 		{
 			Button button = new Button();
-			button.Click += new EventHandler(ButtonClick);
-			button.Name = index.ToString();
+			button.Click += new EventHandler(taskButtonClick);
+			button.Name = "task" + index.ToString();
 			button.Tag = task;
 			button.Text = task.description;
-			button.Size = new Size(Settings.buttonWidth, Settings.buttonHeigth);
+			button.Size = new Size(Settings.taskButtonWidth, Settings.buttonHeigth);
 			button.BackColor = SystemColors.ButtonHighlight;
 			return button;
 		}
 		#endregion
 
-		#region dodawanie przycisków do groupboxów
-		private void addButtonsToGroupbox(GroupBox gb, Button[] buttons)
-		{
-			for (int i = 0; i < buttons.Length; i++)
-			{
-				int buttonHorizontalLocation = Settings.horizontalButtonPadding;
-				int buttonVerticalLocation = i * (Settings.buttonHeigth + Settings.verticalButtonPadding) + Settings.firstButtonVerticalOffset;
-
-				buttons[i].Location = new Point(buttonHorizontalLocation, buttonVerticalLocation);
-				gb.Controls.Add(buttons[i]);
-			}
-		}
-		#endregion
-
-		#region naciśnięcie przycisku
-		private void ButtonClick(object sender, EventArgs e)
+		#region naciśnięcie przycisku grupy
+		private void groupButtonClick(object sender, EventArgs e)
 		{
 			Button button = sender as Button;
+			groupButtonActions(button);
+			if (this.currentTaskButton != null)
+				taskButtonActions(this.currentTaskButton);
+		}
 
-			if (button.Equals(currentButton))
+		private void groupButtonActions(Button button)
+		{
+			if (button.Equals(currentGroupButton))
 			{
 				button.BackColor = SystemColors.ButtonHighlight;
+				this.currentGroupButton = null;
+			}
+			else
+			{
+				toggleGroupButtonColour(button, false);
+				this.currentGroupButton = button;
+				Button[] taskButtons = populateTaskPanel();
+				setFormLayout(groupButtons, taskButtons);
+			}
+		}
+
+		#endregion
+
+		#region naciśnięcie przycisku zadania
+
+		private void taskButtonClick(object sender, EventArgs e)
+		{
+			Button button = sender as Button;
+			if (this.currentGroupButton == null)
+				return;
+			taskButtonActions(button);
+		}
+
+		private void taskButtonActions(Button button)
+		{
+			if (button.Equals(currentTaskButton))
+			{
+				button.BackColor = SystemColors.ButtonHighlight;
+				toggleGroupButtonColour(this.currentGroupButton, false);
 				stopCurrentTask();
 			}
 			else
 			{
-				toggleButtonColour(button);
+				toggleTaskButtonColour(button);
+				toggleGroupButtonColour(this.currentGroupButton, true);
 				stopCurrentTask();
 				startNewTask(button);
-				this.currentButton = button;
+				this.currentTaskButton = button;
 			}
 			initializeTimer();
 		}
@@ -183,7 +253,7 @@ namespace TimeLogger
 #if DEBUG
 			minDuration = 0;
 #else
-			minDuration = 2;
+			minDuration = 1;
 #endif
 			if (this.currentTaskLogItem.taskDurationInMinutes < minDuration)   //nie zapisuję tak krótkich zadań, prawdopodobnie to pomyłka
 				removeTaskFromLog(this.currentTaskLogItem);
@@ -191,7 +261,7 @@ namespace TimeLogger
 				this.logManager.saveTaskLogs(LogType.Detailed, this.taskLogs);
 			
 			this.currentTaskLogItem = null;
-			this.currentButton = null;
+			this.currentTaskButton = null;
 		}
 
 		private void logCurrentTask()
@@ -279,6 +349,7 @@ namespace TimeLogger
 			stopCurrentTask();
 			GroupsForm df = new GroupsForm();
 			df.ShowDialog();
+			this.groupButtons = generateGroupButtons();
 			reloadControls();
 		}
 		#endregion
@@ -297,18 +368,32 @@ namespace TimeLogger
 		#endregion
 
 		#region pomocnicze
-		private void toggleButtonColour(Button button)
+
+		private void toggleGroupButtonColour(Button button, bool isTaskOn)
+		{
+			if (button == null)
+				return;
+			Color c = button.BackColor;
+			if (this.currentGroupButton != null)
+				this.currentGroupButton.BackColor = SystemColors.ButtonHighlight;
+
+			button.BackColor = isTaskOn ? Color.LightGreen : Color.Yellow;
+		}
+
+		private void toggleTaskButtonColour(Button button)
 		{
 			Color c = button.BackColor;
-			if (this.currentButton != null)
-				this.currentButton.BackColor = SystemColors.ButtonHighlight;
+			if (this.currentTaskButton != null)
+				this.currentTaskButton.BackColor = SystemColors.ButtonHighlight;
 			button.BackColor = Color.LightGreen;
 		}
 
 		private void reloadControls()
 		{
-			mainPanel.Controls.Clear();
-			this.totalGroupboxHeigth = 0;
+			groupPanel.Controls.Clear();
+			taskPanel.Controls.Clear();
+			if (this.currentGroupButton != null)
+				this.currentGroupButton.BackColor = SystemColors.ButtonHighlight;   //inaczej pozostaje żółty. jeżeli był wcześniej kliknięty
 			initializeProperties();
 			generateFormLayout();
 		}

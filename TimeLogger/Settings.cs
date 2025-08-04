@@ -5,10 +5,11 @@ namespace TimeLogger
     
     public class Settings
     {
-        #region statyczne właściwości publiczne związane z rozmiarami okna desktopu, przycisków itp
+		#region statyczne właściwości publiczne związane z rozmiarami okna desktopu, przycisków itp
 
-        //rozmiary buttonów
-        public static int buttonWidth = 250;
+		//rozmiary buttonów
+		public static int groupButtonWidth = 150;
+		public static int taskButtonWidth = 250;
         public static int buttonHeigth = 23;
 
         //rozlokowanie buttonów w groupboxie
@@ -19,12 +20,12 @@ namespace TimeLogger
 
         //rozlokowanie groupboxów
         public static int firstGroupboxVerticalLocation = 0;
-        public static int horizontalGroupboxPadding = 0;
+        public static int horizontalPadding = 20;
         public static int verticalGroupboxPadding = 10;
 
         //wysokość desktopu
-        public static int maxPanelHeigth = 600;
-        public static int minPanelHeigth = 100;
+        public static int maxMainFormHeigth = 600;
+        public static int minMainFormHeigth = 100;
 
         #endregion
 

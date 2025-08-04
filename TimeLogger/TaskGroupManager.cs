@@ -27,6 +27,7 @@ namespace TimeLogger
 				if (groups[i].isActive)
 					activeGroupsNames.Add(groups[i].name);
 			}
+			this.activeGroupsNames.Sort();
 		}
 
 		private void readGroups()
