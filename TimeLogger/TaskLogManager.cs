@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using System.IO;
 
 namespace TimeLogger
@@ -10,7 +9,10 @@ namespace TimeLogger
     {
 		private string tasksFileName = "taskLoggerLog.csv";
 
-		internal Dictionary<string, List<TaskLogItem>> readTasks()
+		/// <summary>
+		/// czyta cały plik log, zwraca słownik w którym kluczem jest data
+		/// </summary>
+		internal Dictionary<string, List<TaskLogItem>> readTasksLog()
 		{
 			Dictionary<string, List<TaskLogItem>> taskLogs = new Dictionary<string, List<TaskLogItem>>();
 			if (!File.Exists(tasksFileName))
@@ -45,9 +47,38 @@ namespace TimeLogger
 			File.WriteAllText(logFileName, sb.ToString());
 		}
 
+		/// <summary>
+		/// przyjmuje słownik, w którym kluczem jest data
+		/// </summary>
 		internal void saveTaskLogs(LogType logType, Dictionary<string, List<TaskLogItem>> taskLogs)
 		{
 			saveTaskLogs(logType, new List<Dictionary<string, List<TaskLogItem>>> { taskLogs });
+		}
+
+		/// <summary>
+		/// zmienia nazwy grup w całym pliku log
+		/// </summary>
+		internal void renameGroups(List<Group> renamedGroups)
+		{
+			Dictionary<string, List<TaskLogItem>> dict = readTasksLog();
+			for (int i = 0; i < renamedGroups.Count; i++)
+			{
+				renameGroupInLogs(renamedGroups[i], dict);
+			}
+			saveTaskLogs(LogType.Detailed, dict);
+		}
+
+		private void renameGroupInLogs(Group group, Dictionary<string, List<TaskLogItem>> dict)
+		{
+			foreach (string key in dict.Keys)
+			{
+				List<TaskLogItem> items = dict[key];
+				for (int i = 0; i < items.Count; i++)
+				{
+					if (items[i].groupName == group.oldName)
+						items[i].taskDefinitionItem.groupName = group.name;
+				}
+			}
 		}
 
 		private void processOneDictionary(LogType logType, Dictionary<string, List<TaskLogItem>> taskLogs, StringBuilder sb)

@@ -7,13 +7,14 @@ namespace TimeLogger
     public partial class GroupsForm: Form
     {
 		private TaskGroupManager groupManager;
+		public List<Group> renamedGroups;
 
 		public GroupsForm()
         {
             InitializeComponent();
 		}
 
-		private void TaskDictionaryForm_Load(object sender, EventArgs e)
+		private void GroupForm_Load(object sender, EventArgs e)
 		{
 			groupManager = new TaskGroupManager();
 			loadDgv();
@@ -21,33 +22,36 @@ namespace TimeLogger
 
 		private void loadDgv()
 		{
-			for (int i = 0; i < groupManager.groups.Count; i++)
-			{
-				dgv.Rows.Add(
-					groupManager.groups[i].name,
-					groupManager.groups[i].isActive);
-			}
+			groupBindingSource.DataSource = this.groupManager.groups;
+			groupBindingSource.AllowNew = true;
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			dgv.EndEdit();
 			List<string> lines = new List<string>();
-			for (int i = 0; i < dgv.RowCount - 1; i++)	//ostatni wiersz jest pusty
+			List<Group> renamed = new List<Group>();
+			for (int i = 0; i < groupBindingSource.Count; i++)
 			{
-				if (dgv.Rows[i].Cells[0].Value == null || String.IsNullOrEmpty(dgv.Rows[i].Cells[0].Value.ToString()))
+				Group g = groupBindingSource[i] as Group;
+				if (String.IsNullOrEmpty(g.name))
 					continue;
-				lines.Add(dgv.Rows[i].Cells[0].Value.ToString() + ";" + boolToString((bool)(dgv.Rows[i].Cells[1] as DataGridViewCheckBoxCell).Value));
+				lines.Add(g.toString());
+				if (g.name != g.oldName && !g.isNew)
+					renamed.Add(g);
 			}
-			if (groupManager.saveGroups(lines))
-				this.Close();
+			groupManager.renameGroups(renamed);
+			groupManager.saveGroups(lines);
+			if (renamed.Count > 0)
+			{
+				this.DialogResult = DialogResult.Yes;
+				this.renamedGroups = renamed;
+			}
 		}
 
-		private string boolToString(bool isActive)
+		private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
 		{
-			if (isActive)
-				return "1";
-			return "0";
+			groupBindingSource.AddNew();
 		}
 	}
 }

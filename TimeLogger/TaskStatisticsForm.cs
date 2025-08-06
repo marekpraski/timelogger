@@ -761,14 +761,33 @@ namespace TimeLogger
 			if (dgv.Columns[e.ColumnIndex].Name == "taskDurationInHoursMinutes")
 				return;
 			TaskLogItem selected = taskLogItemBindingSource.Current as TaskLogItem;
-			WorkDetailsEditForm editor = new WorkDetailsEditForm(selected, e.ColumnIndex);
+			if (e.ColumnIndex == 2 || e.ColumnIndex == 3 || e.ColumnIndex == 5)
+				editTaskDetails(selected, e.ColumnIndex);
+			else if (e.ColumnIndex == 0 || e.ColumnIndex == 1)
+				editTask(selected);
+		}
+
+		private void editTaskDetails(TaskLogItem selected, int columnIndex)
+		{
+			WorkDetailsEditForm editor = new WorkDetailsEditForm(selected, columnIndex);
 			editor.ShowDialog();
 			if (editor.DialogResult == DialogResult.OK)
 			{
 				taskLogItemBindingSource.ResetItem(taskLogItemBindingSource.IndexOf(taskLogItemBindingSource.Current));
 				editor.Close();
 			}
-		} 
+		}
+
+		private void editTask(TaskLogItem selected)
+		{
+			TaskEditorForm editor = new TaskEditorForm(selected, this.TaskDefinitionsManager);
+			editor.ShowDialog();
+			if (editor.DialogResult == DialogResult.OK)
+			{
+				taskLogItemBindingSource.ResetItem(taskLogItemBindingSource.IndexOf(taskLogItemBindingSource.Current));
+				editor.Close();
+			}
+		}
 		#endregion
 
 		#region pomocnicze

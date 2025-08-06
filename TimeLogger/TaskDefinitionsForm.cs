@@ -88,7 +88,7 @@ namespace TimeLogger
 				TaskDefinitionItem item = taskDictionaryItemBindingSource.Current as TaskDefinitionItem;
 				item.isActive = isChecked;
 				taskDictionaryItemBindingSource.ResetCurrentItem();
-				this.definitionsManager.saveDictionary();
+				this.definitionsManager.saveTaskDefinitions();
 			}
 		}
 		#endregion
@@ -103,7 +103,7 @@ namespace TimeLogger
 				TaskDefinitionItem item = taskDictionaryItemBindingSource.Current as TaskDefinitionItem;
 				item.description = descr;
 				taskDictionaryItemBindingSource.ResetCurrentItem();
-				this.definitionsManager.saveDictionary();
+				this.definitionsManager.saveTaskDefinitions();
 			}
 		}
 

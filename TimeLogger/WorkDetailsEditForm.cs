@@ -20,14 +20,6 @@ namespace TimeLogger
 		{
 			switch (columnIndex)
 			{
-				case 0:
-					tbDetails.Text = edited.groupName;
-					labelWarning.Visible = true;
-					return;
-				case 1:
-					tbDetails.Text = edited.description;
-					labelWarning.Visible = true;
-					return;
 				case 2:
 					tbDetails.Text = edited.startDateTime.ToString();
 					labelWarning.Visible = true;
@@ -47,14 +39,6 @@ namespace TimeLogger
 		{
 			switch (columnIndex)
 			{
-				case 0:
-					 edited.taskDefinitionItem.groupName = tbDetails.Text;
-					this.DialogResult = DialogResult.OK;
-					return;
-				case 1:
-					 edited.taskDefinitionItem.description = tbDetails.Text;
-					this.DialogResult = DialogResult.OK;
-					return;
 				case 2:
 					 edited.setStartTime(DateTime.Parse(tbDetails.Text));
 					this.DialogResult = DialogResult.OK;

@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ButtonGroup.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="LogType.cs" />
     <Compile Include="Settings.cs" />
@@ -75,6 +74,12 @@
     </Compile>
     <Compile Include="TaskDefinitionItem.cs" />
     <Compile Include="TaskDefinitionsManager.cs" />
+    <Compile Include="TaskEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TaskEditorForm.Designer.cs">
+      <DependentUpon>TaskEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WorkDetailsItem.cs" />
     <Compile Include="TaskGroupManager.cs" />
     <Compile Include="TaskLogItem.cs" />
@@ -110,12 +115,16 @@
     <EmbeddedResource Include="TaskDefinitionsForm.resx">
       <DependentUpon>TaskDefinitionsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TaskEditorForm.resx">
+      <DependentUpon>TaskEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TaskStatisticsForm.resx">
       <DependentUpon>TaskStatisticsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WorkDetailsEditForm.resx">
       <DependentUpon>WorkDetailsEditForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Properties\DataSources\Group.datasource" />
     <None Include="Properties\DataSources\TaskDictionaryItem.datasource" />
     <None Include="Properties\DataSources\TaskLogItem.datasource" />
     <None Include="Properties\Settings.settings">

@@ -14,7 +14,9 @@ namespace TimeLogger
 		/// </summary>
 		public string workDetails { get => workDetailsObject.description; }
 		public TaskDefinitionItem taskDefinitionItem { get; set; } = new TaskDefinitionItem();
-
+		/// <summary>
+		/// get => this.taskDefinitionItem.groupName
+		/// </summary>
 		public string groupName { get => this.taskDefinitionItem.groupName; }
 		/// <summary>
 		/// nazwa zadania, zwraca taskDefinitionItem.description

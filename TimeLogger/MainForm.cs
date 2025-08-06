@@ -44,7 +44,7 @@ namespace TimeLogger
 			this.currentTaskButton = null;
 			this.taskDefinitionsManager = new TaskDefinitionsManager();
 			this.taskDefinitions = this.taskDefinitionsManager.taskDefinitionsAll;
-			this.taskLogs = this.logManager.readTasks();
+			this.taskLogs = this.logManager.readTasksLog();
 			this.taskButtonDict = generateTaskButtons();
 		}
 
@@ -350,6 +350,12 @@ namespace TimeLogger
 			GroupsForm df = new GroupsForm();
 			df.ShowDialog();
 			this.groupButtons = generateGroupButtons();
+			if (df.DialogResult == DialogResult.Yes)
+			{
+				this.taskDefinitionsManager.renameGroups(df.renamedGroups);
+				this.logManager.renameGroups(df.renamedGroups);
+				initializeProperties();
+			}
 			reloadControls();
 		}
 		#endregion

@@ -30,7 +30,7 @@ namespace TimeLogger
 			taskDefinitionsAll.Add(item);
 			if (groupManager.isTaskGroupActive(item))
 				taskDefinitionsActiveGroups.Add(item);
-			saveDictionary();
+			saveTaskDefinitions();
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace TimeLogger
 				if (taskDefinitionsAll[i].Equals(item))
 					taskDefinitionsAll[i] = item;
 			}
-			saveDictionary();
+			saveTaskDefinitions();
 		}
 
 		internal void removeItem(TaskDefinitionItem item)
@@ -52,10 +52,10 @@ namespace TimeLogger
 			taskDefinitionsAll.Remove(item);
 			if (groupManager.isTaskGroupActive(item))
 				taskDefinitionsActiveGroups.Remove(item);
-			saveDictionary();
+			saveTaskDefinitions();
 		}
 
-		internal void saveDictionary()
+		internal void saveTaskDefinitions()
 		{
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < taskDefinitionsAll.Count; i++)
@@ -84,6 +84,19 @@ namespace TimeLogger
 					l.Add(this.taskDefinitionsActiveGroups[i]);
 			}
 			return l;
+		}
+
+		internal void renameGroups(List<Group> renamedGroups)
+		{
+			for (int i = 0; i < renamedGroups.Count; i++)
+			{
+				for (int k = 0; k < this.taskDefinitionsAll.Count; k++)
+				{
+					if (renamedGroups[i].oldName == this.taskDefinitionsAll[k].groupName)
+						this.taskDefinitionsAll[k].groupName = renamedGroups[i].name;
+				}
+			}
+			saveTaskDefinitions();
 		}
 
 		private void readTaskDictionary()

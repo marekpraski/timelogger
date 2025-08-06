@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
 
 namespace TimeLogger
 {
@@ -42,18 +41,9 @@ namespace TimeLogger
 			}
 		}
 
-		internal bool saveGroups(List<string> groupLines)
+		internal void saveGroups(List<string> groupLines)
 		{
-			try
-			{
-				File.WriteAllLines(groupsFileName, groupLines);
-				return true;
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show(e.ToString());
-				return false;				
-			}
+			File.WriteAllLines(groupsFileName, groupLines);
 		}
 
 		internal bool isTaskGroupActive(TaskDefinitionItem item)
@@ -61,6 +51,23 @@ namespace TimeLogger
 			if (this.activeGroupsNames.Contains(item.groupName))
 				return true;
 			return false;
+		}
+
+		internal void renameGroups(List<Group> renamed)
+		{
+			if (renamed.Count == 0)
+				return;
+			
+			TaskDefinitionsManager tdm = new TaskDefinitionsManager();
+			for (int i = 0; i < renamed.Count; i++)
+			{
+				List<TaskDefinitionItem> defs = tdm.getGroupTasks(renamed[i].name);
+				for (int k = 0; k < defs.Count; k++)
+				{
+					defs[k].groupName = renamed[i].name;
+				}
+			}
+			tdm.saveTaskDefinitions();
 		}
 	}
 }
