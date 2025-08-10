@@ -11,6 +11,7 @@ namespace TimeLogger
 		/// lista grup czytana z pliku txt i tworzona podczas tworzenia obiektu TaskGroupManager
 		/// </summary>
 		public List<string> activeGroupsNames { get; } = new List<string>();
+		public List<string> allGroupsNames { get; } = new List<string>();
 		public List<Group> groups { get; } = new List<Group>();
 
 		public TaskGroupManager()
@@ -23,10 +24,12 @@ namespace TimeLogger
 		{
 			for (int i = 0; i < groups.Count; i++)
 			{
+				allGroupsNames.Add(groups[i].name);				
 				if (groups[i].isActive)
 					activeGroupsNames.Add(groups[i].name);
 			}
 			this.activeGroupsNames.Sort();
+			this.allGroupsNames.Sort();
 		}
 
 		private void readGroups()
