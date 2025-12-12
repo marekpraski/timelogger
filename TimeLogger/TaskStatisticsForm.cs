@@ -247,7 +247,7 @@ namespace TimeLogger
 				this.activeFilter == FilterType.AggregatedDayGroupTaskYearmonth ||
 				this.activeFilter == FilterType.AggregatedMonthGroupTask
 				)
-				loadDgv();
+				fillComboDate();  //datagrida ładuje w zdarzeniu zmiany daty
 		} 
 		#endregion
 
@@ -293,30 +293,75 @@ namespace TimeLogger
 			if (!isFormStarted)	//inaczej ładuje na starcie kilka razy, przy ładowaniu każdego kombo
 				return;
 			toggleControlsEnabled(false);
-			List<TaskLogItem> datasource;
-
-			if (comboAggregationType.Text.Contains("daily"))
-				datasource = getAggregatedTasks(detailedLogsGroupedByDay, comboDate.Text);
-			else if (comboAggregationType.Text.Contains("monthly"))
-				datasource = getAggregatedTasks(detailedLogsGroupedByMonth, comboDate.Text);
-			else
-			{
-				datasource = getFilteredTaskLogs(this.detailedLogsGroupedByDay);
-				toggleControlsEnabled(true);
-			}			
+			List<TaskLogItem> datasource = getDgvDatasource(comboDate.Text);
+			
 			List<TaskLogItem> ordered = datasource.OrderBy(x => x.groupName).ToList();
 			taskLogItemBindingSource.DataSource = activeFilter == FilterType.Net ? datasource : ordered;
 			setDgvColumnPropeties();
 			setTimeLoggedLabelText(datasource);
+			setAggregatedTimeLoggedLabel();
 		}
 
+		private List<TaskLogItem> getDgvDatasource(string date)
+		{
+			List<TaskLogItem> datasource;
+
+			if (comboAggregationType.Text.Contains("daily"))
+				datasource = getAggregatedTasks(detailedLogsGroupedByDay,date);
+			else if (comboAggregationType.Text.Contains("monthly"))
+				datasource = getAggregatedTasks(detailedLogsGroupedByMonth, date);
+			else
+			{
+				datasource = getFilteredTaskLogs(this.detailedLogsGroupedByDay);
+				toggleControlsEnabled(true);
+			}
+			return datasource;
+		}
+
+		private void setDgvColumnPropeties()
+		{
+			if (comboAggregationType.Text.Contains("net"))
+			{
+				workDetailsDataGridViewTextBoxColumn.Width = 250;
+				workDetailsDataGridViewTextBoxColumn.HeaderText = "workDetails (double click to edit)";
+			}
+			else
+			{
+				workDetailsDataGridViewTextBoxColumn.Width = 450;
+				workDetailsDataGridViewTextBoxColumn.HeaderText = "workDetails";
+			}
+		}
+		#endregion
+
+		#region obliczanie zagregowanych czasów i ich wyświetlanie w nagłówku
 		private void setTimeLoggedLabelText(List<TaskLogItem> datasource)
 		{
 			if (comboAggregationType.Text.Contains("net"))
-				toolStripLabelTimeLogged.Text = getTimeFromMinutes(datasource);
+				toolStripLabelTimeLoggedOnDate.Text = getTimeFromMinutes(datasource);
 			else
-				toolStripLabelTimeLogged.Text = getTimeFromHoursMinutes(datasource);
+				toolStripLabelTimeLoggedOnDate.Text = "time logged (on date): " + getTimeFromHoursMinutes(datasource);
+		}
 
+		private void setAggregatedTimeLoggedLabel()
+		{
+			if (comboAggregationType.Text.Contains("net") || comboGroup.SelectedIndex == 0)
+				toolStripLabelTimeLoggedAggregate.Text = "";
+			else
+				toolStripLabelTimeLoggedAggregate.Text = "time (aggr): " + getAggregatedHoursMinutes();
+		}
+
+		private string getAggregatedHoursMinutes()
+		{
+			int time = 0;
+			for (int i = 0; i < comboDate.Items.Count; i++)
+			{
+				List<TaskLogItem> datasource = getDgvDatasource(comboDate.Items[i].ToString());
+				for (int j = 0; j < datasource.Count; j++)
+				{
+					time += convertToMinutes(datasource[j].taskDurationInHoursMinutes);
+				}
+			}
+			return getHoursMinutes(time);
 		}
 
 		private string getTimeFromHoursMinutes(List<TaskLogItem> datasource)
@@ -340,7 +385,7 @@ namespace TimeLogger
 				string m = hoursMinutes.Substring(0, endIndexMinutes);
 				return Convert.ToInt32(hoursMinutes.Substring(0, endIndexMinutes));
 			}
-			
+
 			string hr = hoursMinutes.Substring(0, endIndexHr);
 			int startIndexMinutes = endIndexHr + 5;
 			string min = hoursMinutes.Substring(startIndexMinutes, hoursMinutes.Length - endIndexMinutes - 2);
@@ -365,22 +410,8 @@ namespace TimeLogger
 				return minutesTotal + " min";
 
 			int minutes = minutesTotal - hours * 60;
-			return "total time logged: " + hours + " hr  " + minutes + " min";
-		}
-
-		private void setDgvColumnPropeties()
-		{
-			if (comboAggregationType.Text.Contains("net"))
-			{
-				workDetailsDataGridViewTextBoxColumn.Width = 250;
-				workDetailsDataGridViewTextBoxColumn.HeaderText = "workDetails (double click to edit)";
-			}
-			else
-			{
-				workDetailsDataGridViewTextBoxColumn.Width = 450;
-				workDetailsDataGridViewTextBoxColumn.HeaderText = "workDetails";
-			}
-		}
+			return hours + " hr  " + minutes + " min";
+		} 
 		#endregion
 
 		#region tworzenie słownika TaskLogItems grupowanych po miesiącu

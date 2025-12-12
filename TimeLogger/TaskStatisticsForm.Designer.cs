@@ -50,7 +50,7 @@
 			this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
 			this.comboAggregationType = new System.Windows.Forms.ToolStripComboBox();
 			this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-			this.toolStripLabelTimeLogged = new System.Windows.Forms.ToolStripLabel();
+			this.toolStripLabelTimeLoggedOnDate = new System.Windows.Forms.ToolStripLabel();
 			this.comboGroup = new System.Windows.Forms.ComboBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
@@ -58,6 +58,7 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.comboTask = new System.Windows.Forms.ComboBox();
+			this.toolStripLabelTimeLoggedAggregate = new System.Windows.Forms.ToolStripLabel();
 			this.taskLogItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
 			this.groupNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -65,6 +66,7 @@
 			this.endTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.workDetailsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
 			((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
 			this.bindingNavigator1.SuspendLayout();
@@ -140,7 +142,9 @@
             this.toolStripLabel1,
             this.comboAggregationType,
             this.toolStripLabel2,
-            this.toolStripLabelTimeLogged});
+            this.toolStripLabelTimeLoggedOnDate,
+            this.toolStripLabel3,
+            this.toolStripLabelTimeLoggedAggregate});
 			this.bindingNavigator1.Location = new System.Drawing.Point(0, 0);
 			this.bindingNavigator1.MoveFirstItem = this.bindingNavigatorMoveFirstItem;
 			this.bindingNavigator1.MoveLastItem = this.bindingNavigatorMoveLastItem;
@@ -279,11 +283,11 @@
 			this.toolStripLabel2.Size = new System.Drawing.Size(19, 24);
 			this.toolStripLabel2.Text = "    ";
 			// 
-			// toolStripLabelTimeLogged
+			// toolStripLabelTimeLoggedOnDate
 			// 
-			this.toolStripLabelTimeLogged.Name = "toolStripLabelTimeLogged";
-			this.toolStripLabelTimeLogged.Size = new System.Drawing.Size(71, 24);
-			this.toolStripLabelTimeLogged.Text = "time logged";
+			this.toolStripLabelTimeLoggedOnDate.Name = "toolStripLabelTimeLoggedOnDate";
+			this.toolStripLabelTimeLoggedOnDate.Size = new System.Drawing.Size(71, 24);
+			this.toolStripLabelTimeLoggedOnDate.Text = "time logged";
 			// 
 			// comboGroup
 			// 
@@ -351,6 +355,12 @@
 			this.comboTask.TabIndex = 12;
 			this.comboTask.SelectedIndexChanged += new System.EventHandler(this.comboTask_SelectedIndexChanged);
 			// 
+			// toolStripLabelTimeLoggedAggregate
+			// 
+			this.toolStripLabelTimeLoggedAggregate.Name = "toolStripLabelTimeLoggedAggregate";
+			this.toolStripLabelTimeLoggedAggregate.Size = new System.Drawing.Size(58, 24);
+			this.toolStripLabelTimeLoggedAggregate.Text = "time aggr";
+			// 
 			// taskLogItemBindingSource
 			// 
 			this.taskLogItemBindingSource.DataSource = typeof(TimeLogger.TaskLogItem);
@@ -408,6 +418,12 @@
 			this.workDetailsDataGridViewTextBoxColumn.Name = "workDetailsDataGridViewTextBoxColumn";
 			this.workDetailsDataGridViewTextBoxColumn.ReadOnly = true;
 			this.workDetailsDataGridViewTextBoxColumn.Width = 250;
+			// 
+			// toolStripLabel3
+			// 
+			this.toolStripLabel3.Name = "toolStripLabel3";
+			this.toolStripLabel3.Size = new System.Drawing.Size(46, 24);
+			this.toolStripLabel3.Text = "             ";
 			// 
 			// TaskStatisticsForm
 			// 
@@ -469,11 +485,13 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn taskDurationInHoursMinutesDataGridViewTextBoxColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn workDetailsDataGridViewTextBoxColumn;
 		private System.Windows.Forms.ToolStripButton btnToCsvAllDates;
-		private System.Windows.Forms.ToolStripLabel toolStripLabelTimeLogged;
+		private System.Windows.Forms.ToolStripLabel toolStripLabelTimeLoggedOnDate;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.ComboBox comboTask;
 		private System.Windows.Forms.ToolStripLabel toolStripLabel1;
 		private System.Windows.Forms.ToolStripComboBox comboAggregationType;
 		private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+		private System.Windows.Forms.ToolStripLabel toolStripLabelTimeLoggedAggregate;
+		private System.Windows.Forms.ToolStripLabel toolStripLabel3;
 	}
 }
