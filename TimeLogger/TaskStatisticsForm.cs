@@ -764,22 +764,33 @@ namespace TimeLogger
 
 		private void btnToCsv_Click(object sender, EventArgs e)
 		{
+			string fileName = getFileName();
 			if (comboAggregationType.Text.Contains("daily"))
-				new TaskLogManager().saveTaskLogs(LogType.AggregatedDaily, getAggregatedLogsPerGroup(this.detailedLogsGroupedByDay, comboDate.Text));
+				new TaskLogManager(fileName).saveTaskLogs(LogType.AggregatedDaily, getAggregatedLogsPerGroup(this.detailedLogsGroupedByDay, comboDate.Text));
 			else if (comboAggregationType.Text.Contains("monthly"))
-				new TaskLogManager().saveTaskLogs(LogType.AggregatedMonthly, getAggregatedLogsPerGroup(this.detailedLogsGroupedByMonth, comboDate.Text));
+				new TaskLogManager(fileName).saveTaskLogs(LogType.AggregatedMonthly, getAggregatedLogsPerGroup(this.detailedLogsGroupedByMonth, comboDate.Text));
 
 			MessageBox.Show("Saved");
 		}
 
 		private void btnToCsvAllDates_Click(object sender, EventArgs e)
 		{
+			string fileName = getFileName();
 			if (comboAggregationType.Text.Contains("daily"))
-				new TaskLogManager().saveTaskLogs(LogType.AggregatedDaily, getAggregatedLog(this.detailedLogsGroupedByDay));
+				new TaskLogManager(fileName).saveTaskLogs(LogType.AggregatedDaily, getAggregatedLog(this.detailedLogsGroupedByDay));
 			else if (comboAggregationType.Text.Contains("monthly"))
-				new TaskLogManager().saveTaskLogs(LogType.AggregatedMonthly, getAggregatedLog(this.detailedLogsGroupedByMonth));
+				new TaskLogManager(fileName).saveTaskLogs(LogType.AggregatedMonthly, getAggregatedLog(this.detailedLogsGroupedByMonth));
 
 			MessageBox.Show("Saved");
+		}
+
+		private string getFileName()
+		{
+			SaveFileDialog fd = new SaveFileDialog();
+			fd.Filter = "CSV files (*.csv)|*.csv";
+			if (fd.ShowDialog() == DialogResult.OK)
+				return fd.FileName;
+			return "";
 		}
 
 		#endregion

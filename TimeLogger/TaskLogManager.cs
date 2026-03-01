@@ -7,7 +7,17 @@ namespace TimeLogger
 {
     public class TaskLogManager
     {
-		private string tasksFileName = "taskLoggerLog.csv";
+		private readonly string tasksFileName = "taskLoggerLog.csv";
+		private string taskStatisticsFileName;
+		
+		public TaskLogManager()
+		{			
+		}
+
+		public TaskLogManager(string taskStatisticsFileName)
+		{
+			this.taskStatisticsFileName = taskStatisticsFileName;
+		}
 
 		/// <summary>
 		/// czyta cały plik log, zwraca słownik w którym kluczem jest data
@@ -114,10 +124,12 @@ namespace TimeLogger
 		{
 			if (logType == LogType.Detailed)
 				return this.tasksFileName;
-			if (logType == LogType.AggregatedDaily)
+			if (String.IsNullOrEmpty(this.taskStatisticsFileName) && logType == LogType.AggregatedDaily)
 				return "taskLoggerDailyAggregates.csv";
-			else
+			if (String.IsNullOrEmpty(this.taskStatisticsFileName) && logType == LogType.AggregatedMonthly)
 				return "taskLoggerMonthlyAggregates.csv";
+
+			return this.taskStatisticsFileName;
 		}
 
 	}
