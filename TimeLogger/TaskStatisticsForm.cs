@@ -53,7 +53,7 @@ namespace TimeLogger
 		private void TaskStatisticsForm_Load(object sender, EventArgs e)
 		{
 			fillComboAggregation();
-			fillComboGroup();
+			fillComboGroup(checkIncludeInactive.Checked);
 			fillComboYearMonth();
 			fillComboDate();
 			isFormStarted = true;
@@ -181,15 +181,24 @@ namespace TimeLogger
 		#endregion
 
 		#region wypełnianie kombo grup
-		private void fillComboGroup()
+		private void checkIncludeInactive_CheckedChanged(object sender, EventArgs e)
+		{
+			fillComboGroup(checkIncludeInactive.Checked);
+		}
+
+		private void fillComboGroup(bool includeInactive)
 		{
 			comboGroup.Items.Clear();
 			comboGroup.Items.Add("--All--");
-			List<string> groups = new TaskGroupManager().activeGroupsNames;
-			for (int i = 0; i < groups.Count; i++)
-			{
-				comboGroup.Items.Add(groups[i]);
-			}
+			List<string> groups;
+			if (includeInactive)
+				groups = new TaskGroupManager().allGroupsNames;
+			else 
+				groups = new TaskGroupManager().activeGroupsNames;
+				for (int i = 0; i < groups.Count; i++)
+				{
+					comboGroup.Items.Add(groups[i]);
+				}
 			comboGroup.SelectedIndex = 0;
 		} 
 		#endregion

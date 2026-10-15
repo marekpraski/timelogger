@@ -51,6 +51,8 @@
 			this.comboAggregationType = new System.Windows.Forms.ToolStripComboBox();
 			this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
 			this.toolStripLabelTimeLoggedOnDate = new System.Windows.Forms.ToolStripLabel();
+			this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+			this.toolStripLabelTimeLoggedAggregate = new System.Windows.Forms.ToolStripLabel();
 			this.comboGroup = new System.Windows.Forms.ComboBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
@@ -58,7 +60,7 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.comboTask = new System.Windows.Forms.ComboBox();
-			this.toolStripLabelTimeLoggedAggregate = new System.Windows.Forms.ToolStripLabel();
+			this.checkIncludeInactive = new System.Windows.Forms.CheckBox();
 			this.taskLogItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
 			this.groupNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -66,7 +68,6 @@
 			this.endTimeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.taskDurationInHoursMinutesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.workDetailsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
 			((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
 			this.bindingNavigator1.SuspendLayout();
@@ -95,7 +96,7 @@
 			this.dgv.ReadOnly = true;
 			this.dgv.RowHeadersVisible = false;
 			this.dgv.RowHeadersWidth = 51;
-			this.dgv.Size = new System.Drawing.Size(918, 420);
+			this.dgv.Size = new System.Drawing.Size(989, 417);
 			this.dgv.TabIndex = 0;
 			this.dgv.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellDoubleClick);
 			// 
@@ -152,7 +153,7 @@
 			this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
 			this.bindingNavigator1.Name = "bindingNavigator1";
 			this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-			this.bindingNavigator1.Size = new System.Drawing.Size(939, 27);
+			this.bindingNavigator1.Size = new System.Drawing.Size(1010, 27);
 			this.bindingNavigator1.TabIndex = 6;
 			this.bindingNavigator1.Text = "bindingNavigator1";
 			// 
@@ -289,11 +290,23 @@
 			this.toolStripLabelTimeLoggedOnDate.Size = new System.Drawing.Size(71, 24);
 			this.toolStripLabelTimeLoggedOnDate.Text = "time logged";
 			// 
+			// toolStripLabel3
+			// 
+			this.toolStripLabel3.Name = "toolStripLabel3";
+			this.toolStripLabel3.Size = new System.Drawing.Size(46, 24);
+			this.toolStripLabel3.Text = "             ";
+			// 
+			// toolStripLabelTimeLoggedAggregate
+			// 
+			this.toolStripLabelTimeLoggedAggregate.Name = "toolStripLabelTimeLoggedAggregate";
+			this.toolStripLabelTimeLoggedAggregate.Size = new System.Drawing.Size(58, 24);
+			this.toolStripLabelTimeLoggedAggregate.Text = "time aggr";
+			// 
 			// comboGroup
 			// 
 			this.comboGroup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboGroup.FormattingEnabled = true;
-			this.comboGroup.Location = new System.Drawing.Point(268, 31);
+			this.comboGroup.Location = new System.Drawing.Point(238, 31);
 			this.comboGroup.Name = "comboGroup";
 			this.comboGroup.Size = new System.Drawing.Size(188, 21);
 			this.comboGroup.TabIndex = 7;
@@ -302,7 +315,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(230, 36);
+			this.label2.Location = new System.Drawing.Point(198, 35);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(34, 13);
 			this.label2.TabIndex = 8;
@@ -311,7 +324,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(778, 36);
+			this.label3.Location = new System.Drawing.Point(857, 35);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(59, 13);
 			this.label3.TabIndex = 10;
@@ -321,7 +334,7 @@
 			// 
 			this.comboYearMonth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboYearMonth.FormattingEnabled = true;
-			this.comboYearMonth.Location = new System.Drawing.Point(840, 31);
+			this.comboYearMonth.Location = new System.Drawing.Point(922, 31);
 			this.comboYearMonth.Name = "comboYearMonth";
 			this.comboYearMonth.Size = new System.Drawing.Size(76, 21);
 			this.comboYearMonth.TabIndex = 9;
@@ -330,7 +343,7 @@
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(182, 36);
+			this.label4.Location = new System.Drawing.Point(152, 34);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(46, 13);
 			this.label4.TabIndex = 11;
@@ -339,7 +352,7 @@
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(461, 36);
+			this.label5.Location = new System.Drawing.Point(549, 35);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(27, 13);
 			this.label5.TabIndex = 13;
@@ -349,17 +362,22 @@
 			// 
 			this.comboTask.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboTask.FormattingEnabled = true;
-			this.comboTask.Location = new System.Drawing.Point(491, 31);
+			this.comboTask.Location = new System.Drawing.Point(582, 31);
 			this.comboTask.Name = "comboTask";
 			this.comboTask.Size = new System.Drawing.Size(264, 21);
 			this.comboTask.TabIndex = 12;
 			this.comboTask.SelectedIndexChanged += new System.EventHandler(this.comboTask_SelectedIndexChanged);
 			// 
-			// toolStripLabelTimeLoggedAggregate
+			// checkIncludeInactive
 			// 
-			this.toolStripLabelTimeLoggedAggregate.Name = "toolStripLabelTimeLoggedAggregate";
-			this.toolStripLabelTimeLoggedAggregate.Size = new System.Drawing.Size(58, 24);
-			this.toolStripLabelTimeLoggedAggregate.Text = "time aggr";
+			this.checkIncludeInactive.AutoSize = true;
+			this.checkIncludeInactive.Location = new System.Drawing.Point(432, 35);
+			this.checkIncludeInactive.Name = "checkIncludeInactive";
+			this.checkIncludeInactive.Size = new System.Drawing.Size(100, 17);
+			this.checkIncludeInactive.TabIndex = 14;
+			this.checkIncludeInactive.Text = "include inactive";
+			this.checkIncludeInactive.UseVisualStyleBackColor = true;
+			this.checkIncludeInactive.CheckedChanged += new System.EventHandler(this.checkIncludeInactive_CheckedChanged);
 			// 
 			// taskLogItemBindingSource
 			// 
@@ -419,17 +437,12 @@
 			this.workDetailsDataGridViewTextBoxColumn.ReadOnly = true;
 			this.workDetailsDataGridViewTextBoxColumn.Width = 250;
 			// 
-			// toolStripLabel3
-			// 
-			this.toolStripLabel3.Name = "toolStripLabel3";
-			this.toolStripLabel3.Size = new System.Drawing.Size(46, 24);
-			this.toolStripLabel3.Text = "             ";
-			// 
 			// TaskStatisticsForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(939, 483);
+			this.ClientSize = new System.Drawing.Size(1010, 480);
+			this.Controls.Add(this.checkIncludeInactive);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.comboTask);
 			this.Controls.Add(this.label4);
@@ -493,5 +506,6 @@
 		private System.Windows.Forms.ToolStripLabel toolStripLabel2;
 		private System.Windows.Forms.ToolStripLabel toolStripLabelTimeLoggedAggregate;
 		private System.Windows.Forms.ToolStripLabel toolStripLabel3;
+		private System.Windows.Forms.CheckBox checkIncludeInactive;
 	}
 }

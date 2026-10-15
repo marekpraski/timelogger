@@ -50,39 +50,38 @@
             this.taskStatsToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-			this.menuStrip1.Size = new System.Drawing.Size(507, 28);
+			this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+			this.menuStrip1.Size = new System.Drawing.Size(409, 24);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
 			// groupsToolStripMenuItem
 			// 
 			this.groupsToolStripMenuItem.Name = "groupsToolStripMenuItem";
-			this.groupsToolStripMenuItem.Size = new System.Drawing.Size(70, 24);
+			this.groupsToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
 			this.groupsToolStripMenuItem.Text = "Groups";
 			this.groupsToolStripMenuItem.Click += new System.EventHandler(this.groupsToolStripMenuItem_Click);
 			// 
 			// allTasksToolStripMenuItem
 			// 
 			this.allTasksToolStripMenuItem.Name = "allTasksToolStripMenuItem";
-			this.allTasksToolStripMenuItem.Size = new System.Drawing.Size(95, 24);
+			this.allTasksToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
 			this.allTasksToolStripMenuItem.Text = "Definitions";
 			this.allTasksToolStripMenuItem.Click += new System.EventHandler(this.taskDictionaryToolStripMenuItem_Click);
 			// 
 			// taskStatsToolStripMenuItem
 			// 
 			this.taskStatsToolStripMenuItem.Name = "taskStatsToolStripMenuItem";
-			this.taskStatsToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
+			this.taskStatsToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
 			this.taskStatsToolStripMenuItem.Text = "Statistics";
 			this.taskStatsToolStripMenuItem.Click += new System.EventHandler(this.taskStatsToolStripMenuItem_Click);
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(16, 34);
-			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label1.Location = new System.Drawing.Point(12, 28);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(140, 16);
+			this.label1.Size = new System.Drawing.Size(111, 13);
 			this.label1.TabIndex = 2;
 			this.label1.Text = "additional work details";
 			// 
@@ -91,55 +90,57 @@
 			this.comboWorkDetails.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
 			this.comboWorkDetails.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
 			this.comboWorkDetails.FormattingEnabled = true;
-			this.comboWorkDetails.Location = new System.Drawing.Point(16, 54);
-			this.comboWorkDetails.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.comboWorkDetails.Location = new System.Drawing.Point(12, 44);
 			this.comboWorkDetails.Name = "comboWorkDetails";
-			this.comboWorkDetails.Size = new System.Drawing.Size(440, 24);
+			this.comboWorkDetails.Size = new System.Drawing.Size(356, 21);
 			this.comboWorkDetails.Sorted = true;
 			this.comboWorkDetails.TabIndex = 3;
 			// 
 			// btnDeleteWorkDetails
 			// 
 			this.btnDeleteWorkDetails.Image = global::TimeLogger.Properties.Resources.delete;
-			this.btnDeleteWorkDetails.Location = new System.Drawing.Point(464, 54);
-			this.btnDeleteWorkDetails.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.btnDeleteWorkDetails.Location = new System.Drawing.Point(374, 44);
 			this.btnDeleteWorkDetails.Name = "btnDeleteWorkDetails";
-			this.btnDeleteWorkDetails.Size = new System.Drawing.Size(31, 28);
+			this.btnDeleteWorkDetails.Size = new System.Drawing.Size(23, 23);
 			this.btnDeleteWorkDetails.TabIndex = 4;
 			this.btnDeleteWorkDetails.UseVisualStyleBackColor = true;
 			this.btnDeleteWorkDetails.Click += new System.EventHandler(this.btnDeleteWorkDetails_Click);
 			// 
 			// groupPanel
 			// 
-			this.groupPanel.Location = new System.Drawing.Point(13, 86);
+			this.groupPanel.Location = new System.Drawing.Point(10, 70);
+			this.groupPanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
 			this.groupPanel.Name = "groupPanel";
-			this.groupPanel.Size = new System.Drawing.Size(168, 132);
+			this.groupPanel.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.groupPanel.Size = new System.Drawing.Size(153, 107);
 			this.groupPanel.TabIndex = 5;
 			this.groupPanel.TabStop = false;
 			this.groupPanel.Text = "groups";
 			// 
 			// taskPanel
 			// 
-			this.taskPanel.Location = new System.Drawing.Point(187, 86);
+			this.taskPanel.Location = new System.Drawing.Point(167, 72);
+			this.taskPanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
 			this.taskPanel.Name = "taskPanel";
-			this.taskPanel.Size = new System.Drawing.Size(308, 132);
+			this.taskPanel.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.taskPanel.Size = new System.Drawing.Size(231, 107);
 			this.taskPanel.TabIndex = 6;
 			this.taskPanel.TabStop = false;
 			this.taskPanel.Text = "tasks";
 			// 
 			// MainForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(507, 230);
+			this.ClientSize = new System.Drawing.Size(409, 187);
 			this.Controls.Add(this.taskPanel);
 			this.Controls.Add(this.groupPanel);
 			this.Controls.Add(this.btnDeleteWorkDetails);
 			this.Controls.Add(this.comboWorkDetails);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.menuStrip1);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.Name = "MainForm";
 			this.Text = "Time Logger";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);

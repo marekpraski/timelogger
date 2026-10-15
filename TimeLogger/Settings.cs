@@ -8,7 +8,7 @@ namespace TimeLogger
 		#region statyczne właściwości publiczne związane z rozmiarami okna desktopu, przycisków itp
 
 		//rozmiary buttonów
-		public static int groupButtonWidth = 150;
+		public static int groupButtonWidth = 180;
 		public static int taskButtonWidth = 250;
         public static int buttonHeigth = 23;
 
